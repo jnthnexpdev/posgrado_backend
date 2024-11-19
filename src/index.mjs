@@ -5,7 +5,7 @@ const app = express();
 const { fecha, hora } = await getDateTime();
 
 app.listen(3000, async() => {
-    console.log(`Server on port 3000 ${hora} ${fecha}`);
+    console.log(`Servidor NodeJS en puerto 3000 a ${hora} del ${fecha}`);
 })
 
 export default app;
