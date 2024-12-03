@@ -1,5 +1,5 @@
-import bcrypt from bcrypt;
-import mongoose from mongoose;
+import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 const schema = mongoose.Schema;
 
 const adminModel = new schema({
@@ -14,6 +14,7 @@ const adminModel = new schema({
         codigoAcceso: { type: String },
         validezCodigoAcceso: { type: Boolean } 
     }
+    
 });
 
 adminModel.pre('save', async function(next){
