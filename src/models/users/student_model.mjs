@@ -3,16 +3,20 @@ import mongoose from mongoose;
 const schema = mongoose.Schema;
 
 const studentModel = new schema({
-    nombre : { type : String, required : true },
-    correo : { type : String, required : true },
+    nombre : { type : String, required : true, trim: true },
+    correo : { type : String, required : true, trim: true, unique : true },
     password : { type : String, required : true },
-    tipoCuenta : { type : String, required : true },
+    tipoCuenta: { 
+        type: String, 
+        required: true, 
+        enum: ['Coordinador', 'Asesor', 'Alumno'] 
+    },
     fechaRegistro: { type: String },
     horaRegistro: { type: String },
     sesion: {
         ultimaSesion: { type: String },
         codigoAcceso: { type: String },
-        validezCodigoAcceso: { type: Boolean } 
+        validezCodigo: { type: Boolean } 
     }
 });
 
