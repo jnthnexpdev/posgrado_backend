@@ -7,7 +7,7 @@ export const getDateTime = async () => {
         const { date } = response.data;
 
         const formatDate = moment(date).format('DD-MM-YYYY');
-        const formatTime = moment(date).format('h:mmA');
+        const formatTime = moment(date).format('h:mm A');
 
         return { fecha : formatDate, hora : formatTime };
     }catch(error){

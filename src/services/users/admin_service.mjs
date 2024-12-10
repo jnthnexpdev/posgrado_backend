@@ -29,3 +29,55 @@ export const saveAdminUser = async(adminData) => {
         throw error;
     }
 }
+
+export const allAdminsUsers = async(queryParams) => {
+    try {
+        const { search = '', page = 1, pageSize = 10 } = queryParams;
+        const searchRegex = new RegExp(search, 'i');
+        const filter = { 
+            $or: [
+                { nombre : searchRegex }, 
+                { correo : searchRegex }
+            ] 
+        };
+
+        const admins = await adminModel
+            .find(filter)
+            .select('-password')
+            .skip((page - 1) * pageSize)
+            .limit(pageSize);
+
+        const total = await adminModel.countDocuments(filter);
+
+        if(admins.length === 0){
+            throw new AppError('No hay coordinadores registrados en el sistema');
+        }
+
+        return {
+            admins,
+            pagination: {
+                total,
+                page: Number(page),
+                pageSize: Number(pageSize),
+                totalPages: Math.ceil(total / pageSize)
+            }
+        };
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const deleteAdminUser = async(id) => {
+    try {
+        const deleteAdmin = await adminModel.findByIdAndDelete(id);
+
+        if(!deleteAdmin){
+            throw new AppError("Error al eliminar la cuenta", 401);
+        }
+
+        return;
+    } catch (error) {
+        throw error;
+    }
+}

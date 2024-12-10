@@ -32,5 +32,5 @@ adminModel.pre('save', async function(next){
     }
 });
 
-const admin = mongoose.model('Cordinadores', adminModel);
+const admin = mongoose.model('Coordinadores', adminModel);
 export default admin;
