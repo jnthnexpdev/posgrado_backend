@@ -15,6 +15,7 @@ export const saveTeacherUser = async(teacherData) => {
             correo : teacherData.correo,
             password : teacherData.password,
             tipoCuenta : 'Asesor',
+            estatusCuenta : 'Activa',
             fechaRegistro : fecha,
             horaRegistro : hora,
             sesion : {
@@ -50,7 +51,7 @@ export const allTeachersUsers = async(queryParams) => {
         const total = await teacherModel.countDocuments(filter);
 
         if(teachers.length === 0){
-            throw new AppError('No hay asesores registrados en el sistema');
+            throw new AppError('No hay asesores registrados en el sistema', 404);
         }
 
         return {

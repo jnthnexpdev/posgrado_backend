@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -5,7 +6,31 @@ import adminModel from '../../models/users/admin_model.mjs';
 import teacherModel from '../../models/users/teacher_model.mjs';
 import studentModel from '../../models/users/student_model.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
-import { getDateTime } from '../../utils/datetime';
+import { getDateTime } from '../../utils/datetime.mjs';
+
+export async function createToken(user) {
+    try {
+        const { fecha, hora } = await getDateTime();
+
+        const tokenData = {
+            _id : user._id,
+            account : user.tipoCuenta,
+            name : user.nombre,
+            time : hora,
+            date : fecha
+        };
+    
+        const token = jwt.sign(
+            tokenData,
+            process.env.SECRET,
+            { expiresIn : '8h', algorithm : 'HS256' }
+        );
+    
+        return { token }; 
+    } catch (error) {
+        throw new AppError('Ha ocurrido un error al crear el token de sesion', 401);
+    }
+}
 
 export async function updateLastSession(email, account){
     try{

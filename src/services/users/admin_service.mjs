@@ -15,6 +15,7 @@ export const saveAdminUser = async(adminData) => {
             correo : adminData.correo,
             password : adminData.password,
             tipoCuenta : 'Coordinador',
+            estatusCuenta : 'Activa',
             fechaRegistro : fecha,
             horaRegistro : hora,
             sesion : {
@@ -50,7 +51,7 @@ export const allAdminsUsers = async(queryParams) => {
         const total = await adminModel.countDocuments(filter);
 
         if(admins.length === 0){
-            throw new AppError('No hay coordinadores registrados en el sistema');
+            throw new AppError('No hay coordinadores registrados en el sistema', 404);
         }
 
         return {

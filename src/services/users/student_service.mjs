@@ -15,6 +15,7 @@ export const saveStudentUser = async(studentData) => {
             correo : studentData.correo,
             password : studentData.password,
             tipoCuenta : 'Alumno',
+            estatusCuenta : 'Activa',
             fechaRegistro : fecha,
             horaRegistro : hora,
             sesion : {
@@ -50,7 +51,7 @@ export const allStudentsUsers = async(queryParams) => {
         const total = await studenModel.countDocuments(filter);
 
         if(students.length === 0){
-            throw new AppError('No hay alumnos registrados en el sistema');
+            throw new AppError('No hay alumnos registrados en el sistema', 404);
         }
 
         return {

@@ -11,6 +11,11 @@ const teacherModel = new schema({
         required: true, 
         enum: ['Coordinador', 'Asesor', 'Alumno'] 
     },
+    estatusCuenta: { 
+        type: String, 
+        required: true, 
+        enum: ['Activa', 'Suspendida', 'Bloqueada'] 
+    },
     fechaRegistro: { type: String },
     horaRegistro: { type: String },
     sesion: {

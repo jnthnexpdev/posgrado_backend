@@ -30,14 +30,13 @@ export async function getDataUserFromCookie(req){
 
 export async function getDataUserByEmail(email){
     try {
-        const admin = await adminModel.findOne({ correo : email }).select('-password');
-        const teacher = await teacherModel.findOne({ correo : email }).select('-password');
-        const student = await studentModel.findOne({ correo : email }).select('-password');
+        const admin = await adminModel.findOne({ correo : email });
+        const teacher = await teacherModel.findOne({ correo : email });
+        const student = await studentModel.findOne({ correo : email });
 
-        if(!admin || !teacher || !student){
+        if(!admin && !teacher && !student){
             throw new AppError("El correo no pertenece a ningun usuario registrado", 404);  
         }
-
         return admin || teacher || student;
     } catch (error) {
         throw new AppError("Ha ocurrido un error al obtener la informacion", 400);
