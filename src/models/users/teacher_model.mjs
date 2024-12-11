@@ -1,5 +1,5 @@
-import bcrypt from bcrypt;
-import mongoose from mongoose;
+import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 const schema = mongoose.Schema;
 
 const teacherModel = new schema({
