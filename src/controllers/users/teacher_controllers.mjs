@@ -1,19 +1,20 @@
 import mongoose from 'mongoose';
 
 import AppError from '../../utils/errors/server_errors.mjs';
-import * as adminService from '../../services/users/admin_service.mjs';
+import * as teacherService from '../../services/users/teacher_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
+import teacher from '../../models/users/teacher_model.mjs';
 
-export const registerAdminAccount = async(req, res) => {
+export const registerTeacherAccount = async(req, res) => {
     try {
-        const adminData = req.body;
-        const newAdmin = await adminService.saveAdminUser(adminData);
+        const teacherData = req.body;
+        const newTeacher = await teacherService.saveTeacherUser(teacherData);
 
         return res.status(201).json({
             success : true,
             httpCode : 201,
-            message : 'Coordinador guardado',
-            adminAccount : newAdmin
+            message : 'Asesor guardado',
+            teacherAccount : newTeacher
         });
 
     } catch (error) {
@@ -28,15 +29,15 @@ export const registerAdminAccount = async(req, res) => {
     }
 }
 
-export const allAdminsAccounts = async(req, res) => {
+export const allTeachersAccounts = async(req, res) => {
     try {
-        const adminsInfo = await adminService.allAdminsUsers(req.query);
+        const teachersInfo = await teacherService.allTeachersUsers(req.query);
 
         return res.status(200).json({
             success: true,
-            message: 'Coordinadores obtenidos correctamente',
-            admins: adminsInfo.admins,
-            pagination: adminsInfo.pagination
+            message: 'Asesores obtenidos correctamente',
+            teachers: teachersInfo.teachers,
+            pagination: teachersInfo.pagination
         });
     } catch (error) {
         if (error instanceof AppError){
@@ -50,7 +51,7 @@ export const allAdminsAccounts = async(req, res) => {
     }
 }
 
-export const deleteAdminAccount = async(req, res) => {
+export const deleteTeacherAccount = async(req, res) => {
     try {
 
         const id = req.params.id;
@@ -63,7 +64,7 @@ export const deleteAdminAccount = async(req, res) => {
             });
         }
 
-        await adminService.deleteAdminUser(id);
+        await teacherService.deleteTeacherUser(id);
 
         return res.status(201).json({
             success : true,
