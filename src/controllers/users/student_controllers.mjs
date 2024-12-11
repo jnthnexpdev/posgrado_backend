@@ -1,19 +1,19 @@
 import mongoose from 'mongoose';
 
 import AppError from '../../utils/errors/server_errors.mjs';
-import * as teacherService from '../../services/users/teacher_service.mjs';
+import * as studentService from '../../services/users/student_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 
-export const registerTeacherAccount = async(req, res) => {
+export const registerStudentAccount = async(req, res) => {
     try {
-        const teacherData = req.body;
-        const newTeacher = await teacherService.saveTeacherUser(teacherData);
+        const studentData = req.body;
+        const newStudent = await studentService.saveStudentUser(studentData);
 
         return res.status(201).json({
             success : true,
             httpCode : 201,
-            message : 'Asesor guardado',
-            teacherAccount : newTeacher
+            message : 'Alumno guardado',
+            studentAccount : newStudent
         });
 
     } catch (error) {
@@ -28,15 +28,15 @@ export const registerTeacherAccount = async(req, res) => {
     }
 }
 
-export const allTeachersAccounts = async(req, res) => {
+export const allStudentsAccounts = async(req, res) => {
     try {
-        const teachersInfo = await teacherService.allTeachersUsers(req.query);
+        const studentsInfo = await studentService.allStudentsUsers(req.query);
 
         return res.status(200).json({
             success: true,
-            message: 'Asesores obtenidos correctamente',
-            teachers: teachersInfo.teachers,
-            pagination: teachersInfo.pagination
+            message: 'Alumnos obtenidos correctamente',
+            students: studentsInfo.students,
+            pagination: studentsInfo.pagination
         });
     } catch (error) {
         if (error instanceof AppError){
@@ -50,7 +50,7 @@ export const allTeachersAccounts = async(req, res) => {
     }
 }
 
-export const deleteTeacherAccount = async(req, res) => {
+export const deleteStudentAccount = async(req, res) => {
     try {
 
         const id = req.params.id;
@@ -63,7 +63,7 @@ export const deleteTeacherAccount = async(req, res) => {
             });
         }
 
-        await teacherService.deleteTeacherUser(id);
+        await studentService.deleteStudentsUser(id);
 
         return res.status(201).json({
             success : true,
