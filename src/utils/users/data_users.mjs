@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -18,13 +19,14 @@ export async function getDataUserFromCookie(req){
         const teacher = await teacherModel.findById(decoded._id).select('-password');
         const student = await studentModel.findById(decoded._id).select('-password');
 
-        if(!admin || !teacher || !student){
+        if(!admin && !teacher && !student){
             throw new AppError("Usuario no encontrado", 404);  
         }
 
         return admin || teacher || student;
     } catch (error) {
-        throw new AppError("Ha ocurrido un error al obtener la informacion", 400);
+        console.error(error);
+        throw new AppError("Ha ocurrido un error al obtener la informacion al buscar el usuario", 400);
     }
 }
 
@@ -35,7 +37,7 @@ export async function getDataUserByEmail(email){
         const student = await studentModel.findOne({ correo : email });
 
         if(!admin && !teacher && !student){
-            throw new AppError("El correo no pertenece a ningun usuario registrado", 404);  
+            return false;
         }
         return admin || teacher || student;
     } catch (error) {
@@ -49,7 +51,7 @@ export async function getDataUserById(id){
         const teacher = await teacherModel.findById(id).select('-password');
         const student = await studentModel.findById(id).select('-password');
 
-        if(!admin || !teacher || !student){
+        if(!admin && !teacher && !student){
             throw new AppError("El id no pertenece a ningun usuario registrado", 404);  
         }
 

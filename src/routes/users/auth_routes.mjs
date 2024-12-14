@@ -10,5 +10,7 @@ const router = express.Router();
 
 router.use(cookieParser(secret));
 router.post('/iniciar-sesion', authControllers.login);
+router.patch('/cambiar-password', authControllers.changePassword);
+router.patch('/cambiar-correo', authControllers.changeEmail);
 
 export default router;

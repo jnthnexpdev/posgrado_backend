@@ -1,11 +1,13 @@
 import express from 'express';
 import router from './routes/index_routes.mjs';
 import bodyParser from 'body-parser';
-import { getDateTime } from './utils/datetime.mjs';
+import cors from 'cors';
 import { connectToMongoDB } from './db/connection.mjs';
 
 const app = express();
-// const { fecha, hora } = await getDateTime();
+
+//Cors 
+app.use(cors({origin : 'http://localhost:4200', credentials : true}));
 
 //Json
 app.use(bodyParser.json({limit : '5mb'}));
@@ -25,7 +27,6 @@ connectToMongoDB();
 app.use(router);
 
 app.listen(3000, async() => {
-    // console.log(`${hora}, ${fecha}`);
     console.log(`Servidor backend en el puerto 3000`);
 })
 
