@@ -35,6 +35,68 @@ export const login = async(req, res) => {
     }
 }
 
+export const userTypeAccount = async(req, res) => {
+    try {
+        const user = await userUtils.getDataUserFromCookie(req);
+        if(!user){
+            return res.status(404).json({
+                success: false,
+                httpCode: 404,
+                message: 'El usuario no existe en el sistema',
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            httpCode: 200,
+            accountType: user.tipoCuenta,
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+export const editUser = async(req, res) => {
+    try {
+        const body = req.body;
+        if(!body){
+            return res.status(400).json({
+                success: false,
+                httpCode : 400,
+                message : 'Informacion incompleta'
+            });
+        }
+
+        const user = await userUtils.getDataUserFromCookie(req);
+        if(!user){
+            return res.status(400).json({
+                success: false,
+                httpCode : 404,
+                message : 'El usuario no existe en el sistema'
+            });
+        }
+
+        
+
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+};  
+
 export const changePassword = async(req, res) => {
     try {
         const userInfo = await userUtils.getDataUserFromCookie(req);
@@ -47,9 +109,9 @@ export const changePassword = async(req, res) => {
         }
         const updateUserPassword = await authService.changeUserPassword(userInfo._id, req.body.password);
 
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
-            httpCode : 201,
+            httpCode : 200,
             message: 'Contraseña actualizada',
         });
     } catch (error) {
@@ -76,9 +138,9 @@ export const changeEmail = async(req, res) => {
         }
         const updateUserEmail = await authService.changeUserEmail(userInfo._id, req.body.correo);
 
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
-            httpCode : 201,
+            httpCode : 200,
             message: 'Direccion de correo actualizada',
         });
     } catch (error) {

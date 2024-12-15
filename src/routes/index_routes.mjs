@@ -10,6 +10,6 @@ const router = express.Router();
 router.use('/api/itc/posgrado/coordinacion', adminRoutes);
 router.use('/api/itc/posgrado/asesores', teacherRoutes);
 router.use('/api/itc/posgrado/alumnos', studentsRoutes);
-router.use('/api/itc/posgrado/autenticacion', authRoutes);
+router.use('/api/itc/posgrado/usuario', authRoutes);
 
 export default router;
