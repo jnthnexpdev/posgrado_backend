@@ -1,5 +1,3 @@
-import mongoose from 'mongoose';
-
 import AppError from '../../utils/errors/server_errors.mjs';
 import * as authService from '../../services/users/auth_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';

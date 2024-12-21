@@ -3,8 +3,8 @@ const schema = mongoose.Schema;
 
 const revisionModel = new schema({
     tesis : { type : mongoose.Schema.Types.ObjectId, ref : 'Tesis', required : true },
-    asesor : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesor', required : true },
-    alumno : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumno', required : true },
+    asesor : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
+    alumno : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumnos', required : true },
     detalles : [{
         nombreRevision : { type: String },
         fechaLimite : { type: String },

@@ -1,9 +1,9 @@
-import mongoose from mongoose;
+import mongoose from 'mongoose';
 const schema = mongoose.Schema;
 
 const advisorAssignmentModel = new schema({
-    asesor : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesor', required : true },
-    alumno : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumno', required : true },
+    asesor : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
+    alumno : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumnos', required : true },
     periodo : { type: String, required: true },
     fechaAsignacion : { type : String, required : true },
     notas : { type : String, required : false }
