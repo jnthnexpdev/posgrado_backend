@@ -23,7 +23,6 @@ const adminModel = new schema({
         codigoAcceso: { type: String },
         validezCodigo: { type: Boolean } 
     }
-    
 });
 
 adminModel.pre('save', async function(next){

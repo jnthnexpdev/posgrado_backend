@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import mongoose from 'mongoose';
+import mongoose, { set } from 'mongoose';
 
 import AppError from '../../utils/errors/server_errors.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
@@ -7,6 +7,8 @@ import * as sesionUtils from '../../utils/users/session_users.mjs';
 import adminModel from '../../models/users/admin_model.mjs';
 import teacherModel from '../../models/users/teacher_model.mjs';
 import studentModel from '../../models/users/student_model.mjs';
+
+const blackListedTokens = new set();
 
 export const loginUser = async(correo, password) => {
     try {   
@@ -34,6 +36,39 @@ export const loginUser = async(correo, password) => {
         // Retornar los datos relevantes
         return token;
 
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const logOut = async(req, res) => {
+    try {
+        const token = req.signedCookies.session;
+        if(!token){
+            throw new AppError("Error al cerrar la sesion, falta el token", 400);
+        }
+
+        res.clearCookie('session');
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const dataUser = async(id) => {
+    try {
+        const isValidId = mongoose.isValidObjectId(id);
+        if(!isValidId){
+            throw new AppError('Id invalido', 401);
+        }
+
+        const user = await userUtils.getDataUserById(id);
+        if(!user){
+            throw new AppError('El usuario no existe', 404);
+        }
+
+        return user;
     } catch (error) {
         throw error;
     }
@@ -92,6 +127,38 @@ export const changeUserEmail = async(id, email) => {
 
             default : 
                 throw new AppError('Tipo de usuario desconocido', 401);
+        }
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const deleteMyAccount = async(id) => {
+    try {
+        const isValidId = mongoose.isValidObjectId(id);
+        if(!isValidId){
+            throw new AppError('Id invalido', 401);
+        }
+
+        const user = await userUtils.getDataUserById(id);
+        if(!user){
+            throw new AppError('El usuario no existe', 404);
+        }
+
+        switch(user.tipoCuenta){
+            case 'Coordinador':
+                await adminModel.findByIdAndDelete(user._id);
+                break;
+            case 'Asesor':
+                await teacherModel.findByIdAndDelete(user._id);
+                break;
+            case 'Alumno':
+                await studentModel.findByIdAndDelete(user._id);
+                break;
+            default: 
+                throw new AppError("Tipo de cuenta invalida", 400);
         }
 
         return true;

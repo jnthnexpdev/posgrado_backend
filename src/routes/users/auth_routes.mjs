@@ -10,8 +10,11 @@ const router = express.Router();
 
 router.use(cookieParser(secret));
 router.post('/iniciar-sesion', authControllers.login);
+router.post('/cerrar-sesion', authControllers.logout);
+router.get('/informacion-usuario', authControllers.dataUser);
 router.get('/tipo-usuario', authControllers.userTypeAccount);
 router.patch('/cambiar-password', authControllers.changePassword);
 router.patch('/cambiar-correo', authControllers.changeEmail);
+router.delete('/eliminar-mi-cuenta', authControllers.deleteMyAccount);
 
 export default router;

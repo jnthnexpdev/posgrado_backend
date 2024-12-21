@@ -11,7 +11,7 @@ export default function adminToken(){
         if(!token){
             return res.status(401).json({
                 success : false,
-                statusCode : 401,
+                httpCode : 401,
                 message : 'Token no proporcionado'
             });
         }
@@ -21,7 +21,7 @@ export default function adminToken(){
             if(!decoded || !allowedUser.includes(decoded.tipoCuenta)){
                 return res.status(403).json({
                     success : false,
-                    statusCode : 403,
+                    httpCode : 403,
                     message : 'Acceso no autorizado, no tienes permisos'
                 });
             }
@@ -31,14 +31,14 @@ export default function adminToken(){
             if (error.name === 'TokenExpiredError'){
                 return res.status(401).json({
                     success : false,
-                    statusCode : 401,
+                    httpCode : 401,
                     expiretAt : error.expiretAt,
                     message : 'Token caducado, inicia sesion'
                 });
             }else{
                 return res.status(401).json({
                     success : false,
-                    statusCode : 401,
+                    httpCode : 401,
                     message : 'Token invalido'
                 });
             }
