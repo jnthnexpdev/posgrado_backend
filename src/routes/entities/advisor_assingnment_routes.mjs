@@ -11,6 +11,7 @@ const router = express.Router();
 router.use(cookieParser(secret));
 router.post('/registrar-asesorado', assignamentControllers.registerAdviced);
 router.get('/detalles-asesoramiento/:id', assignamentControllers.detailsAdvice);
+router.get('/alumnos-asesorados', assignamentControllers.searchAdvisedsByTeacher);
 // router.post('/solicitar-asesor', adminControllers.registerAdminAccount);
 // router.get('/informacion-asesoramiento', assignamentControllers.allAdminsAccounts);
 router.delete('/eliminar-asesoramiento/:id', assignamentControllers.deleteAdviced);

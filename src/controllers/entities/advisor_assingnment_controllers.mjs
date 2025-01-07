@@ -44,6 +44,47 @@ export const registerAdviced = async(req, res) => {
     }
 };
 
+export const searchAdvisedsByTeacher = async(req, res) => {
+    try {
+        const teacher = await userUtils.getDataUserFromCookie(req);
+        const { page = 1, pageSize = 10, search = '' } = req.query;
+        const idIsValid = mongoose.isValidObjectId(teacher._id, Number(page), Number(pageSize), search);
+
+        if(!idIsValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id asesor invalido'
+            });
+        }
+
+        const adviseds = await assignmentService.studentsAdvised(teacher._id);
+
+        if(adviseds.students.length <= 0){
+            return res.status(400).json({
+                success : false,
+                httpCode : 404,
+                message : 'No hay alumnos asesorados'
+            });
+        }
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            ...adviseds
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
 export const detailsAdvice = async(req, res) => {
     try {
         const idIsValid = mongoose.isValidObjectId(req.params.id);
