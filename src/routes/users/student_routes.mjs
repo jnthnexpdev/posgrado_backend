@@ -4,7 +4,7 @@ import * as studentControllers from '../../controllers/users/student_controllers
 const router = express.Router();
 
 router.post('/registrar-cuenta', studentControllers.registerStudentAccount);
-router.get('/listado-cuentas', studentControllers.allStudentsAccounts);
+router.get('/listado-alumnos', studentControllers.allStudentsAccounts);
 router.delete('/eliminar-cuenta/:id', studentControllers.deleteStudentAccount);
 
 export default router;

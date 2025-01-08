@@ -4,7 +4,7 @@ import * as teacherControllers from '../../controllers/users/teacher_controllers
 const router = express.Router();
 
 router.post('/registrar-cuenta', teacherControllers.registerTeacherAccount);
-router.get('/listado-cuentas', teacherControllers.allTeachersAccounts);
+router.get('/listado-asesores', teacherControllers.allTeachersAccounts);
 router.delete('/eliminar-cuenta/:id', teacherControllers.deleteTeacherAccount);
 
 export default router;
