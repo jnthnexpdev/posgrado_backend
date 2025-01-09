@@ -53,12 +53,16 @@ export const studentsAdvised = async(idTeacher, page = 1, pageSize = 10, search 
         const totalStudents = filteredAdviseds.length;
         const totalPages = Math.ceil(totalStudents / pageSize);
         const paginatedAdviseds = filteredAdviseds.slice((page - 1) * pageSize, page * pageSize );
+        const pagination = {
+            "total": totalStudents,
+            "page": page,
+            "pageSize": pageSize,
+            "totalPages": totalPages
+        }
 
         return {
             students: paginatedAdviseds,
-            currentPage: page,
-            totalPages,
-            totalStudents,
+            pagination
         };
     } catch (error) {
         throw error;
