@@ -6,13 +6,14 @@ export const saveStudentUser = async(studentData) => {
     try{
         const { hora, fecha } = await getDateTime();
 
-        if(!studentData.nombre || !studentData.correo || !studentData.password){
+        if(!studentData.nombre || !studentData.numeroControl || !studentData.correo || !studentData.password){
             throw new AppError("Informacion incompleta", 401);
         }
 
         const student = new studenModel({
             nombre : studentData.nombre,
             correo : studentData.correo,
+            numeroControl : studentData.numeroControl,
             password : studentData.password,
             tipoCuenta : 'Alumno',
             estatusCuenta : 'Activa',

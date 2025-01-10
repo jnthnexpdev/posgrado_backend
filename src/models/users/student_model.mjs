@@ -5,6 +5,7 @@ const schema = mongoose.Schema;
 const studentModel = new schema({
     nombre : { type : String, required : true, trim: true },
     correo : { type : String, required : true, trim: true, unique : true },
+    numeroControl : { type : String, required : true, trim : true, unique : true },
     password : { type : String, required : true },
     tipoCuenta: { 
         type: String, 
