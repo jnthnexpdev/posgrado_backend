@@ -128,7 +128,7 @@ export const deleteAdviced = async(req, res) => {
             });
         }
 
-        await assignmentService.advisorDelete(req.params.id);
+        await assignmentService.deleteAdvisor(req.params.id);
         
         return res.status(200).json({
             success : true,

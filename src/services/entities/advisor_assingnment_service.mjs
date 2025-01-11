@@ -1,10 +1,8 @@
-import mongoose from 'mongoose';
 import advisorAssignmentModel from '../../models/entities/advisor_assingnment_model.mjs';
 import studentModel from '../../models/users/student_model.mjs';
 import teacherModel from '../../models/users/teacher_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
-import student from '../../models/users/student_model.mjs';
 
 export const advisorAssignment = async(idTeacher, body) => {
     try {
@@ -35,17 +33,29 @@ export const studentsAdvised = async(idTeacher, page = 1, pageSize = 10, search 
     try {
         const adviseds = await advisorAssignmentModel
         .find({ asesor: idTeacher }) 
-        .populate('alumno', 'nombre correo')
+        .populate('alumno', 'nombre correo numeroControl')
         .lean();
 
         if (!adviseds.length) {
             throw new AppError('No se encontraron alumnos asesorados para este asesor.', 404);
         }
 
-        const filteredAdviseds = adviseds.filter(advised => {
+        const advisedsWithDefaults = adviseds.map(advised => {
+            // Si el alumno no existe, asigna valores por defecto
+            if (!advised.alumno) {
+                advised.alumno = {
+                    nombre: 'Alumno eliminado',
+                    correo: 'N/A',
+                    numeroControl : 'N/A'
+                };
+            }
+            return advised;
+        });
+
+        const filteredAdviseds = advisedsWithDefaults.filter(advised => {
             const searchRegex = new RegExp(search, 'i');
-            return(
-                searchRegex.test(advised.alumno.nombre) || 
+            return (
+                searchRegex.test(advised.alumno.nombre) ||
                 searchRegex.test(advised.alumno.correo)
             );
         });
