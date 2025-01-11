@@ -24,12 +24,13 @@ export const registerAdviced = async(req, res) => {
             }); 
         }
 
-        const advisorAssignment = await assignmentService.advisorAssignment(teacherData._id, req.body);
+        const controlNumber = req.body.numeroControl;
+        const advisorAssignment = await assignmentService.advisorAssignment(teacherData._id, controlNumber, req.body);
         
         return res.status(201).json({
             success : true,
             httpCode : 201,
-            message : 'Informacion guardada',
+            message : 'Asesoramiento registrado',
             data : advisorAssignment
         }); 
     } catch (error) {

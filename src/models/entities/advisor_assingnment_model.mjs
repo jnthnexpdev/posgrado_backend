@@ -2,7 +2,10 @@ import mongoose from 'mongoose';
 const schema = mongoose.Schema;
 
 const advisorAssignmentModel = new schema({
-    asesorId : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
+    asesor: {
+        asesorId : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumnos', required : true },
+        nombre : { type : String, required : true, trim: true },
+    },
     alumno: {
         alumnoId : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumnos', required : true },
         nombre : { type : String, required : true, trim: true },

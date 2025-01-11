@@ -4,21 +4,36 @@ import teacherModel from '../../models/users/teacher_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
 
-export const advisorAssignment = async(idTeacher, body) => {
+export const advisorAssignment = async(idTeacher, controlNumber, body) => {
     try {
         const { hora, fecha } = await getDateTime();
 
-        const student = await studentModel.findById(body.alumno);
+        const student = await studentModel.find(
+            { numeroControl :  controlNumber }
+        );
         if(!student){
             throw new AppError("Alumno no encontrado");
         }
 
+        const teacher = await teacherModel.findById(body.asesor.asesorId);
+        if(!teacher){
+            throw new AppError("Asesor no encontrado");
+        }
+
         const newAdvisorAssignment = new advisorAssignmentModel({
-            asesor : idTeacher,
-            alumno : student._id,
+            asesor : {
+                asesorId : teacher._id,
+                nombre : teacher.nombre
+            },
+            alumno : {
+                alumnoId : student._id,
+                nombre : student.nombre,
+                correo : student.correo,
+                numeroControl : student.numeroControl,
+            },
             fechaAsignacion : fecha,
             periodo : body.periodo,
-            notas : body.notas
+            notas : body.notas || ''
         });
 
         await newAdvisorAssignment.save();
