@@ -3,7 +3,7 @@ const schema = mongoose.Schema;
 
 const advisorAssignmentModel = new schema({
     asesor: {
-        asesorId : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumnos', required : true },
+        asesorId : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
         nombre : { type : String, required : true, trim: true },
     },
     alumno: {

@@ -31,7 +31,6 @@ export const registerAdviced = async(req, res) => {
             success : true,
             httpCode : 201,
             message : 'Asesoramiento registrado',
-            data : advisorAssignment
         }); 
     } catch (error) {
         if (error instanceof AppError){

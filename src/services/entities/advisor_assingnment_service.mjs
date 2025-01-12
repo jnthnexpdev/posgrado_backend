@@ -8,14 +8,14 @@ export const advisorAssignment = async(idTeacher, controlNumber, body) => {
     try {
         const { hora, fecha } = await getDateTime();
 
-        const student = await studentModel.find(
+        const student = await studentModel.findOne(
             { numeroControl :  controlNumber }
         );
         if(!student){
             throw new AppError("Alumno no encontrado");
         }
 
-        const teacher = await teacherModel.findById(body.asesor.asesorId);
+        const teacher = await teacherModel.findById(idTeacher);
         if(!teacher){
             throw new AppError("Asesor no encontrado");
         }
@@ -47,7 +47,7 @@ export const advisorAssignment = async(idTeacher, controlNumber, body) => {
 export const studentsAdvised = async(idTeacher, page = 1, pageSize = 10, search = '') => {
     try {
         const adviseds = await advisorAssignmentModel
-        .find({ asesor: idTeacher }) 
+        .find({ 'asesor.asesorId': idTeacher }) 
         .populate('alumno', 'nombre correo numeroControl')
         .lean();
 
