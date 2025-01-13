@@ -18,7 +18,7 @@ export const login = async(req, res) => {
         return res.status(200).json({
             success: true,
             httpCode : 200,
-            message: 'Sesión iniciada correctamente',
+            message: 'Sesión iniciada',
             token
         });
     } catch (error) {

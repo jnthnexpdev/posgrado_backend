@@ -8,16 +8,21 @@ export const advisorAssignment = async(idTeacher, controlNumber, body) => {
     try {
         const { hora, fecha } = await getDateTime();
 
+        const studentAdvised = await advisorAssignmentModel.findOne({ 'alumno.numeroControl' : controlNumber });
+        if(studentAdvised){
+            throw new AppError("El alumno ya cuenta con un/a asesor/a asignado/a", 400);
+        }
+
         const student = await studentModel.findOne(
             { numeroControl :  controlNumber }
         );
         if(!student){
-            throw new AppError("Alumno no encontrado");
+            throw new AppError("Alumno no encontrado", 404);
         }
 
         const teacher = await teacherModel.findById(idTeacher);
         if(!teacher){
-            throw new AppError("Asesor no encontrado");
+            throw new AppError("Asesor no encontrado", 404);
         }
 
         const newAdvisorAssignment = new advisorAssignmentModel({
