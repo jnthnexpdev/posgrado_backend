@@ -49,8 +49,14 @@ export const advisorAssignment = async(idTeacher, controlNumber, body) => {
     }
 }
 
-export const studentsAdvised = async(idTeacher, page = 1, pageSize = 10, search = '') => {
+export const studentsAdvised = async(idTeacher, queryParams) => {
     try {
+        let { search = '', page = 1, pageSize = 10 } = queryParams;
+
+        if(search != ''){ 
+            page = 1 
+        }
+        
         const adviseds = await advisorAssignmentModel
         .find({ 'asesor.asesorId': idTeacher }) 
         .populate('alumno', 'nombre correo numeroControl')
@@ -84,10 +90,10 @@ export const studentsAdvised = async(idTeacher, page = 1, pageSize = 10, search 
         const totalPages = Math.ceil(totalStudents / pageSize);
         const paginatedAdviseds = filteredAdviseds.slice((page - 1) * pageSize, page * pageSize );
         const pagination = {
-            "total": totalStudents,
-            "page": page,
-            "pageSize": pageSize,
-            "totalPages": totalPages
+            "total": Number(totalStudents),
+            "page": Number(page),
+            "pageSize": Number(pageSize),
+            "totalPages": Number(totalPages)
         }
 
         return {

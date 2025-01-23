@@ -34,6 +34,7 @@ export const allTeachersAccounts = async(req, res) => {
 
         return res.status(200).json({
             success: true,
+            httpCode : 200,
             message: 'Asesores obtenidos correctamente',
             teachers: teachersInfo.teachers,
             pagination: teachersInfo.pagination

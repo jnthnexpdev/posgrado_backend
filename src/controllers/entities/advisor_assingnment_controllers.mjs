@@ -47,9 +47,7 @@ export const registerAdviced = async(req, res) => {
 export const searchAdvisedsByTeacher = async(req, res) => {
     try {
         const teacher = await userUtils.getDataUserFromCookie(req);
-        const { page = 1, pageSize = 10, search = '' } = req.query;
-        const idIsValid = mongoose.isValidObjectId(teacher._id, Number(page), Number(pageSize), search);
-
+        const idIsValid = mongoose.isValidObjectId(teacher._id);
         if(!idIsValid){
             return res.status(400).json({
                 success : false,
@@ -58,7 +56,7 @@ export const searchAdvisedsByTeacher = async(req, res) => {
             });
         }
 
-        const adviseds = await assignmentService.studentsAdvised(teacher._id);
+        const adviseds = await assignmentService.studentsAdvised(teacher._id, req.query);
 
         if(adviseds.students.length <= 0){
             return res.status(400).json({

@@ -9,8 +9,8 @@ const advisorAssignmentModel = new schema({
     alumno: {
         alumnoId : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumnos', required : true },
         nombre : { type : String, required : true, trim: true },
-        correo : { type : String, required : true, trim: true, unique : true },
-        numeroControl : { type : String, required : true, trim : true, unique : true },
+        correo : { type : String, required : true, trim: true},
+        numeroControl : { type : String, required : true, trim : true },
     },
     periodo : { type: String, required: true },
     fechaAsignacion : { type : String, required : true },
