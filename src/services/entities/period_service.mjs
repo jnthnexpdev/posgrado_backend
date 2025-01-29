@@ -24,27 +24,42 @@ export const registerNewPeriod = async(periodData) => {
     }
 }
 
+export const addStudentToPeriod = async(idStudent, idPeriod) => {
+    try {
+        const period = await periodModel.findById(idPeriod);
+        if(!period){
+            throw new AppError("El periodo no existe", 404);
+        }
+
+        if(period.alumnos.includes(idStudent)){
+            throw new AppError("El alumno ya esta registrado en el periodo", 400);
+        }
+
+        period.alumnos.push(idStudent);
+
+        await period.save();
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const allPeriods = async(queryParams) => {
     try {
-        console.log(queryParams)
-        let { search = '', page = 1, pageSize = 1 } = queryParams;
+        let { search = '', page = 1, pageSize = 20 } = queryParams;
         if(search != ''){
             page = 1;
         }
 
         const searchRegex = new RegExp(search, 'i');
-        const filter = {
-            $or: [
-                { periodo : searchRegex }
-            ]
-        };
 
         const periods = await periodModel
-        .find(filter)
-        .skip((page - 1) * pageSize)
-        .limit(pageSize);
+            .find({ periodo : searchRegex })
+            .skip((page - 1) * pageSize)
+            .limit(pageSize);
 
-        const total = await periodModel.countDocuments(filter);
+        const total = await periodModel.countDocuments({ periodo : searchRegex });
 
         if(periods.length === 0){
             throw new AppError('No hay periodos registrados en el sistema', 404);
@@ -60,6 +75,22 @@ export const allPeriods = async(queryParams) => {
             }
         };
 
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const deletePeriodById = async(idPeriod) => {
+    try {
+        const period = await periodModel.findByIdAndDelete(idPeriod);
+
+        if(!period){
+            throw new AppError("El periodo no existe", 404);
+        }
+
+        await periodModel.findByIdAndDelete(idPeriod);
+
+        return true;
     } catch (error) {
         throw error;
     }

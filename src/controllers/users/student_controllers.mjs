@@ -13,7 +13,7 @@ export const registerStudentAccount = async(req, res) => {
             success : true,
             httpCode : 201,
             message : 'Alumno guardado',
-            studentAccount : newStudent
+            studentId : newStudent._id,
         });
 
     } catch (error) {

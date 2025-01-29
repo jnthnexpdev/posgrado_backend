@@ -4,7 +4,7 @@ const periodModel = new Schema({
     periodo : { type: String, required : true },
     fechaRegistro : { type: String },
     horaRegistro : { type: String },
-    estudiantes : [{
+    alumnos : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Alumnos'
     }]

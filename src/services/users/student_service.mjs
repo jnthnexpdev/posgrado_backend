@@ -25,8 +25,8 @@ export const saveStudentUser = async(studentData) => {
                 validezCodigoAcceso : false,
             }
         });
-
-        return await student.save();
+        await student.save();
+        return student;
     }catch(error){
         throw error;
     }
