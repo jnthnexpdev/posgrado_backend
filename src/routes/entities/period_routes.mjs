@@ -11,6 +11,7 @@ const router = express.Router();
 router.use(cookieParser(secret));
 router.post('/registrar-periodo', periodControllers.registerPeriod);
 router.get('/listado-periodos', periodControllers.allPeriods);
+router.get('/exportar-periodos', periodControllers.exportPeriodsPDF);
 router.patch('/agregar-alumno/:idStudent/:idPeriod', periodControllers.addStudentToPeriod);
 router.delete('/eliminar-periodo/:id', periodControllers.deletePeriod);
 
