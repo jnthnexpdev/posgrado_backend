@@ -4,7 +4,7 @@ import { pdfStyles } from "./pdf_styles.mjs";
 import { getDateTime } from "../datetime.mjs";
 
 // Función para obtener el header del PDF
-function getHeaderAndLogos({ date = "Not specified" } = {}) {
+function getHeaderAndLogos({ period = 'Enero - Junio 2025' } = {}) {
     return [
         {
             columns: [
@@ -25,7 +25,7 @@ function getHeaderAndLogos({ date = "Not specified" } = {}) {
             stack: [
                 {
                     text: [
-                        'Periodos registrados en el sistema de posgrado hasta ', { text: `${date}.`, decoration: 'underline' },
+                        'Listado de alumnos registrados en el sistema en el periodo ', { text: `${period}.`, decoration: 'underline' },
                     ]
                 }
             ],
@@ -40,13 +40,14 @@ function getNewTable() {
     return {
         table: {
             headerRows: 1,
-            widths: ['20%', '30%', '30%', '20%'],
+            widths: ['10%', '30%', '20%', '25%', '15%'],
             body: [
                 [
                     { text: 'No', style: 'tableHeader' },
-                    { text: 'Periodo', style: 'tableHeader' },
-                    { text: 'Fecha', style: 'tableHeader' },
-                    { text: 'Alumnos', style: 'tableHeader' }
+                    { text: 'Nombre', style: 'tableHeader' },
+                    { text: 'N Control', style: 'tableHeader' },
+                    { text: 'Correo', style: 'tableHeader' },
+                    { text: 'F Registro', style: 'tableHeader' }
                 ]
             ]
         },
@@ -61,27 +62,28 @@ function getNewTable() {
 }
 
 // Función principal para exportar los periodos en PDF
-export async function exportPeriods(data) {
+export async function exportStudents(data) {
     return new Promise(async (resolve, reject) => {
         const { fecha, hora } = await getDateTime();
         const date = fecha || "Not specified";
 
         let content = [
-            ...getHeaderAndLogos({ date: date }),
+            ...getHeaderAndLogos('Enero - Junio 2025'),
             getNewTable()
         ];
 
         data.forEach((item, index) => {
             if (index % 15 === 0 && index !== 0) {
                 content.push({ text: '', pageBreak: 'before' });
-                content.push(...getHeaderAndLogos({ date: date }));
+                content.push(...getHeaderAndLogos('Enero - Junio 2025'));
                 content.push(getNewTable());
             }
             content[content.length - 1].table.body.push([
                 { text: `${index + 1}`, style: 'tableData' },
-                { text: item.periodo, style: 'tableData' },
-                { text: item.fechaRegistro, style: 'tableData' },
-                { text: item.alumnos.length, style: 'tableData' }
+                { text: item.nombre, style: 'tableData' },
+                { text: item.numeroControl, style: 'tableData' },
+                { text: item.correo, style: 'tableData' },
+                { text: item.fechaRegistro, style: 'tableData' }
             ]);
         });
 

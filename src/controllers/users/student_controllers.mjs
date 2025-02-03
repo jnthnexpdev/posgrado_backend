@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import AppError from '../../utils/errors/server_errors.mjs';
 import * as studentService from '../../services/users/student_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
+import { exportStudents } from '../../utils/pdfs/export_students.mjs';
 
 export const registerStudentAccount = async(req, res) => {
     try {
@@ -38,6 +39,30 @@ export const allStudentsAccounts = async(req, res) => {
             students: studentsInfo.students,
             pagination: studentsInfo.pagination
         });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+export const exportStudentsByPeriodPDF = async(req, res) => {
+    try {
+        const students = await studentService.allStudentsUsers(req.query);
+
+        const buffer = await exportStudents(students.students);
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename="alumnos.pdf"',
+            'Content-Length': buffer.length
+        });
+        res.end(buffer);
+
     } catch (error) {
         if (error instanceof AppError){
             return res.status(error.httpCode).json({

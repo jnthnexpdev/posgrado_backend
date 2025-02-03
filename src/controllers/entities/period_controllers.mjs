@@ -101,7 +101,7 @@ export const exportPeriodsPDF = async(req, res) => {
             'Content-Disposition': 'attachment; filename="periodos.pdf"',
             'Content-Length': buffer.length
         });
-        res.end(buffer); 
+        res.end(buffer);
 
     } catch (error) {
         if (error instanceof AppError){
