@@ -68,6 +68,37 @@ export const addStudentToPeriod = async(req, res) => {
     }
 }
 
+export const studentsByPeriod = async(req, res) => {
+    try {
+        const idIsValid = mongoose.isValidObjectId(req.params.id);
+        if(!idIsValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id periodo invalido'
+            });
+        }
+
+        const periodData = await periodService.studentsDataByPeriod(req.params.id, req.query);
+
+        return res.status(200).json({
+            success: true,
+            httpCode : 200,
+            message: 'Alumnos obtenidos correctamente',
+            period : periodData
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
 export const allPeriods = async(req, res) => {
     try {
        const periods = await periodService.allPeriods(req.query); 
