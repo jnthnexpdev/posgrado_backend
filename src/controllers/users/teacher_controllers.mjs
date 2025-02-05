@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import AppError from '../../utils/errors/server_errors.mjs';
 import * as teacherService from '../../services/users/teacher_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
+import { exportTeachers } from '../../utils/pdfs/export_teacher.mjs';
 
 export const registerTeacherAccount = async(req, res) => {
     try {
@@ -39,6 +40,30 @@ export const allTeachersAccounts = async(req, res) => {
             teachers: teachersInfo.teachers,
             pagination: teachersInfo.pagination
         });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+export const exportTeachersPDF = async(req, res) => {
+    try {
+        const teachers = await teacherService.allTeachersUsers(req.query);
+
+        const buffer = await exportTeachers(teachers.teachers);
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename="asesores.pdf"',
+            'Content-Length': buffer.length
+        });
+        res.end(buffer);
+
     } catch (error) {
         if (error instanceof AppError){
             return res.status(error.httpCode).json({
