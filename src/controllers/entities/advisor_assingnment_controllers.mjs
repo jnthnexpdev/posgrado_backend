@@ -56,7 +56,7 @@ export const searchAdvisedsByTeacher = async(req, res) => {
             });
         }
 
-        const adviseds = await assignmentService.studentsAdvised(teacher._id, req.query);
+        const adviseds = await assignmentService.studentsAdvised(teacher._id, req.params.period, req.query);
 
         if(adviseds.students.length <= 0){
             return res.status(400).json({

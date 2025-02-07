@@ -93,7 +93,7 @@ export const studentsDataByPeriod = async (idPeriod, queryParams) => {
             },
             {
                 $lookup: {
-                    from: 'alumnos', // Nombre de la colección de alumnos en MongoDB
+                    from: 'alumnos',
                     localField: 'alumnos',
                     foreignField: '_id',
                     as: 'students'

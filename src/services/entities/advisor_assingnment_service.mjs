@@ -49,61 +49,66 @@ export const advisorAssignment = async(idTeacher, controlNumber, body) => {
     }
 }
 
-export const studentsAdvised = async(idTeacher, queryParams) => {
+export const studentsAdvised = async (idTeacher, period, queryParams) => {
     try {
         let { search = '', page = 1, pageSize = 10 } = queryParams;
 
-        if(search != ''){ 
-            page = 1 
+        if (search !== '') { 
+            page = 1;
         }
-        
+
+        // Construimos el filtro base (siempre busca por el ID del asesor)
+        let filter = { 'asesor.asesorId': idTeacher };
+
+        // Agregamos el filtro de periodo si se proporciona
+        if (period) {
+            filter.periodo = period;
+        }
+
         const adviseds = await advisorAssignmentModel
-        .find({ 'asesor.asesorId': idTeacher }) 
-        .populate('alumno', 'nombre correo numeroControl')
-        .lean();
+            .find(filter)
+            .populate('alumno', 'nombre correo numeroControl')
+            .lean();
 
         if (!adviseds.length) {
             throw new AppError('No se encontraron alumnos asesorados para este asesor.', 404);
         }
 
         const advisedsWithDefaults = adviseds.map(advised => {
-            // Si el alumno no existe, asigna valores por defecto
             if (!advised.alumno) {
                 advised.alumno = {
                     nombre: 'Alumno eliminado',
                     correo: 'N/A',
-                    numeroControl : 'N/A'
+                    numeroControl: 'N/A'
                 };
             }
             return advised;
         });
 
-        const filteredAdviseds = advisedsWithDefaults.filter(advised => {
-            const searchRegex = new RegExp(search, 'i');
-            return (
-                searchRegex.test(advised.alumno.nombre) ||
-                searchRegex.test(advised.alumno.correo)
-            );
-        });
+        // Aplicamos el filtro de búsqueda
+        const searchRegex = new RegExp(search, 'i');
+        const filteredAdviseds = advisedsWithDefaults.filter(advised =>
+            searchRegex.test(advised.alumno.nombre) || searchRegex.test(advised.alumno.correo)
+        );
 
+        // Paginación
         const totalStudents = filteredAdviseds.length;
         const totalPages = Math.ceil(totalStudents / pageSize);
-        const paginatedAdviseds = filteredAdviseds.slice((page - 1) * pageSize, page * pageSize );
-        const pagination = {
-            "total": Number(totalStudents),
-            "page": Number(page),
-            "pageSize": Number(pageSize),
-            "totalPages": Number(totalPages)
-        }
-
+        const paginatedAdviseds = filteredAdviseds.slice((page - 1) * pageSize, page * pageSize);
+        
         return {
             students: paginatedAdviseds,
-            pagination
+            pagination: {
+                total: totalStudents,
+                page: Number(page),
+                pageSize: Number(pageSize),
+                totalPages: Number(totalPages)
+            }
         };
     } catch (error) {
         throw error;
     }
-}
+};
 
 export const detailsAdvice = async(idAssignment) => {
     try {
