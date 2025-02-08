@@ -1,4 +1,4 @@
-import pdfMake from "./pdf_fonts.mjs"; // Importamos pdfMake ya configurado
+import pdfMake from "./pdf_fonts.mjs";
 import { convertImageToBase64URL } from "./pdf_images.mjs";
 import { pdfStyles } from "./pdf_styles.mjs";
 import { getDateTime } from "../datetime.mjs";

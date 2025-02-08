@@ -4,6 +4,7 @@ import AppError from '../../utils/errors/server_errors.mjs';
 import * as assignmentService from '../../services/entities/advisor_assingnment_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
+import { exportAdvised } from "../../utils/pdfs/export_advised.mjs";
 
 export const registerAdviced = async(req, res) => {
     try {
@@ -112,6 +113,40 @@ export const detailsAdvice = async(req, res) => {
                 });
             }
             handleServerError(res, error);
+    }
+}
+
+export const exportAdvicedByPeriodPDF = async(req, res) => {
+    try {
+        const teacher = await userUtils.getDataUserFromCookie(req);
+        const idIsValid = mongoose.isValidObjectId(teacher._id);
+        if(!idIsValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id asesor invalido'
+            });
+        }
+        
+        const students = await assignmentService.studentsAdvised(teacher._id, req.params.period, req.query);
+
+        const buffer = await exportAdvised(students.students, teacher.nombre, req.params.period);
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename="asesorados.pdf"',
+            'Content-Length': buffer.length
+        });
+        res.end(buffer);
+
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
     }
 }
 

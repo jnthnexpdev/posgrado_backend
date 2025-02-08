@@ -5,7 +5,6 @@ import * as periodService from '../../services/entities/period_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 import { exportPeriods } from '../../utils/pdfs/export_periods.mjs';
 
-
 export const registerPeriod = async(req, res) => {
     try{
         const periodData = req.body.periodo;
