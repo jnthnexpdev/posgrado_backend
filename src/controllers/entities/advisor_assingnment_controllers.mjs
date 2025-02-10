@@ -6,6 +6,7 @@ import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 import { exportAdvised } from "../../utils/pdfs/export_advised.mjs";
 
+// Registrar asesoramiento
 export const registerAdviced = async(req, res) => {
     try {
         const teacherData = await userUtils.getDataUserFromCookie(req);
@@ -45,6 +46,7 @@ export const registerAdviced = async(req, res) => {
     }
 };
 
+// Alumnos asesorados por un profesor
 export const searchAdvisedsByTeacher = async(req, res) => {
     try {
         const teacher = await userUtils.getDataUserFromCookie(req);
@@ -84,6 +86,7 @@ export const searchAdvisedsByTeacher = async(req, res) => {
     }
 }
 
+// Detalles de un asesoramiento
 export const detailsAdvice = async(req, res) => {
     try {
         const idIsValid = mongoose.isValidObjectId(req.params.id);
@@ -116,6 +119,7 @@ export const detailsAdvice = async(req, res) => {
     }
 }
 
+// Exportar alumnos asesorados en un periodo
 export const exportAdvicedByPeriodPDF = async(req, res) => {
     try {
         const teacher = await userUtils.getDataUserFromCookie(req);
@@ -150,6 +154,7 @@ export const exportAdvicedByPeriodPDF = async(req, res) => {
     }
 }
 
+// Eliminar asesoramiento
 export const deleteAdviced = async(req, res) => {
     try {
         const idIsValid = mongoose.isValidObjectId(req.params.id);

@@ -5,16 +5,16 @@ const tesisModel = new schema({
     titulo : { type : String, required : true },
     alumno : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumnos', required : true },
     asesor : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
-    estatus : { type : String, enum : ['En progreso', 'Aprobada', 'Rechazada'] },
+    estatus : { type : String, enum : ['En progreso', 'Aprobada', 'Rechazada'], default : 'En progreso' },
     aprobacion : {
-        nombre : { type : String, required : true },
-        fechaAprobacion : { type : String, required : true }
+        nombre : { type : String, default : null  },
+        fechaAprobacion : { type : String, default : null  }
     },
-    url : { type : String },
+    url : { type : String, default : null },
     fechaInicio : { type : String, required : true },
-    fechaEntrega : { type : String, required : true },
+    fechaEntrega : { type : String, default : null },
     areaConocimiento : { type : String },
-    resumen : { type : String },
+    resumen : { type : String, default : null },
 });
 
 const tesis = mongoose.model('Tesis', tesisModel);
