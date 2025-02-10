@@ -2,30 +2,19 @@ import mongoose from mongoose;
 const schema = mongoose.Schema;
 
 const revisionModel = new schema({
-    tesis : { type : mongoose.Schema.Types.ObjectId, ref : 'Tesis', required : true },
-    asesor : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
+    asignacion : { type : mongoose.Schema.Types.ObjectId, ref : 'Asignaciones', required : true },
     alumno : { type : mongoose.Schema.Types.ObjectId, ref : 'Alumnos', required : true },
-    detalles : [{
-        nombreRevision : { type: String },
-        fechaLimite : { type: String },
-
-        //Informacion de la entrega por parte del alumno
-        fechaEntrega : { type: String },
-        horaEntrega : { type: String },
-
-        //Informacion de la revision por parte del asesor
-        fechaRevision : { type: String },
-        horaRevision : { type: String },
-        estatus : { type: String },
-
-        //Comentarios u observaciones
-        comentarios : [{
-            idUsuario : { type : mongoose.Schema.Types.ObjectId, required : true },
-            contenido : { type: String },
-            fechaComentario : { type : String },
-            horaComentario : { type : String }
-        }]
-    }]
+    tesis : { type : mongoose.Schema.Types.ObjectId, ref : 'Tesis' },
+    linkEntrega : { type : String, trim : true },
+    fechaEntrega : { type : String, trim : true },
+    calificacion : { type : Numbrer, default : null, min : 0, max : 100 },
+    comentarios : [
+        {
+            nombreUsuario : { type : String, required : true },
+            mensaje : { type : String, required : true },
+            fechaComentario : { type : String, required : true },
+        }
+    ]
 });
 
 const revision = mongoose.model('Revisiones', revisionModel);
