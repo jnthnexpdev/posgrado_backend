@@ -86,6 +86,37 @@ export const searchAdvisedsByTeacher = async(req, res) => {
     }
 }
 
+// Informacion del asesor de un alumno
+export const advisorInfo = async(req, res) => {
+    try {
+        const student = await userUtils.getDataUserFromCookie(req);
+        if(!student){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Alumno no encontrado, id invalido'
+            });
+        }
+
+        const assignment = await assignmentService.searchTeacher(student._id);
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Asesor encontrado',
+            assignment
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
 // Detalles de un asesoramiento
 export const detailsAdvice = async(req, res) => {
     try {
@@ -115,7 +146,7 @@ export const detailsAdvice = async(req, res) => {
                 message: error.message,
                 });
             }
-            handleServerError(res, error);
+        handleServerError(res, error);
     }
 }
 

@@ -2,8 +2,11 @@ import advisorAssignmentModel from '../../models/entities/advisor_assingnment_mo
 import studentModel from '../../models/users/student_model.mjs';
 import teacherModel from '../../models/users/teacher_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
+import * as userUtils from '../../utils/users/data_users.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
+import teacher from '../../models/users/teacher_model.mjs';
 
+// Guardar nuevo asesoramiento
 export const advisorAssignment = async(idTeacher, controlNumber, body) => {
     try {
         const { hora, fecha } = await getDateTime();
@@ -49,6 +52,7 @@ export const advisorAssignment = async(idTeacher, controlNumber, body) => {
     }
 }
 
+// Informacion alumnos asesorados
 export const studentsAdvised = async (idTeacher, period, queryParams) => {
     try {
         let { search = '', page = 1, pageSize = 10 } = queryParams;
@@ -110,6 +114,26 @@ export const studentsAdvised = async (idTeacher, period, queryParams) => {
     }
 };
 
+// Obtener los datos del asesor de un alumno
+export const searchTeacher = async(idStudent) => {
+    try {
+        const assignment = await advisorAssignmentModel.findOne({ 'alumno.alumnoId' : idStudent });
+        const teacher = await userUtils.getDataUserById(assignment.asesor.asesorId);
+        if(!teacher){
+            throw new AppError("Asesor no encontrado", 404);
+        }
+        const assingmentData = {
+            nombre : teacher.nombre,
+            correo : teacher.correo,
+            fechaAsignacion : assignment.fechaAsignacion
+        }
+        return assingmentData;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Buscar informacion del asesoramiento
 export const detailsAdvice = async(idAssignment) => {
     try {
         const assignment = await advisorAssignmentModel.findById(idAssignment);
@@ -133,6 +157,7 @@ export const detailsAdvice = async(idAssignment) => {
     }
 }
 
+// Eliminar asesoramiento por id
 export const deleteAdvisor = async(idAssignment) => {
     try {
         const assignment = await advisorAssignmentModel.findById(idAssignment);

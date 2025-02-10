@@ -12,6 +12,7 @@ router.use(cookieParser(secret));
 router.post('/registrar-asesorado', assignamentControllers.registerAdviced);
 router.get('/detalles-asesoramiento/:id', assignamentControllers.detailsAdvice);
 router.get('/alumnos-asesorados/:period', assignamentControllers.searchAdvisedsByTeacher);
+router.get('/informacion-asesor', assignamentControllers.advisorInfo);
 router.get('/exportar-alumnos-asesorados/:period', assignamentControllers.exportAdvicedByPeriodPDF);
 // router.post('/solicitar-asesor', adminControllers.registerAdminAccount);
 // router.get('/informacion-asesoramiento', assignamentControllers.allAdminsAccounts);
