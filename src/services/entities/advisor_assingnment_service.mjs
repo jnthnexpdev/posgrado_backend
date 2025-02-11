@@ -4,7 +4,6 @@ import teacherModel from '../../models/users/teacher_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
-import teacher from '../../models/users/teacher_model.mjs';
 
 // Guardar nuevo asesoramiento
 export const advisorAssignment = async(idTeacher, controlNumber, body) => {
@@ -113,6 +112,17 @@ export const studentsAdvised = async (idTeacher, period, queryParams) => {
         throw error;
     }
 };
+
+// Conteo de alumnos asesorados de un asesor
+export const studentCounterAdvised = async(idTeacher) => {
+    try {
+        const counter = await advisorAssignmentModel.countDocuments({ 'asesor.asesorId' : idTeacher });
+
+        return counter;
+    } catch (error) {
+        throw error;
+    }
+}
 
 // Obtener los datos del asesor de un alumno
 export const searchTeacher = async(idStudent) => {

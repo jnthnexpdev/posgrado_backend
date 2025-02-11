@@ -117,6 +117,38 @@ export const advisorInfo = async(req, res) => {
     }
 }
 
+// Conteo de alumnos asesorados de un asesor 
+export const counterAdvised = async(req, res) => {
+    try {
+        const teacher = await userUtils.getDataUserFromCookie(req);
+        if(!teacher){
+            return res.status(404).json({
+                success : false,
+                httpCode : 404,
+                message : 'El asesor no existe'
+            });
+        }
+
+        const counter = await assignmentService.studentCounterAdvised(teacher._id);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Conteo de asesorados realizado',
+            counter
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+                });
+            }
+        handleServerError(res, error);
+    }
+}
+
 // Detalles de un asesoramiento
 export const detailsAdvice = async(req, res) => {
     try {
