@@ -52,11 +52,18 @@ export const allTeachersAccounts = async(req, res) => {
     }
 }
 
-export const exportTeachersPDF = async(req, res) => {
+export const exportTeachersPDF = async (req, res) => {
     try {
-        const teachers = await teacherService.allTeachersUsers(req.query);
+        console.time('TotalTime'); // Inicio del contador general
 
+        console.time('FetchingTeachers'); // Contador para el tiempo de obtención de los docentes
+        const teachers = await teacherService.allTeachersUsers(req.query);
+        console.timeEnd('FetchingTeachers'); // Fin del contador de obtención de docentes
+
+        console.time('ExportingPDF'); // Contador para el tiempo de exportación del PDF
         const buffer = await exportTeachers(teachers.teachers);
+        console.timeEnd('ExportingPDF'); // Fin del contador de exportación del PDF
+
         res.writeHead(200, {
             'Content-Type': 'application/pdf',
             'Content-Disposition': 'attachment; filename="asesores.pdf"',
@@ -64,8 +71,10 @@ export const exportTeachersPDF = async(req, res) => {
         });
         res.end(buffer);
 
+        console.timeEnd('TotalTime'); // Fin del contador general
+
     } catch (error) {
-        if (error instanceof AppError){
+        if (error instanceof AppError) {
             return res.status(error.httpCode).json({
                 success: false,
                 httpCode: error.httpCode,
@@ -75,6 +84,7 @@ export const exportTeachersPDF = async(req, res) => {
         handleServerError(res, error);
     }
 }
+
 
 export const deleteTeacherAccount = async(req, res) => {
     try {

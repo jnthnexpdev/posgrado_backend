@@ -8,8 +8,6 @@ import adminModel from '../../models/users/admin_model.mjs';
 import teacherModel from '../../models/users/teacher_model.mjs';
 import studentModel from '../../models/users/student_model.mjs';
 
-const blackListedTokens = new set();
-
 export const loginUser = async(correo, password) => {
     try {   
         if (!correo || !password) {
@@ -43,12 +41,7 @@ export const loginUser = async(correo, password) => {
 
 export const logOut = async(req, res) => {
     try {
-        const token = req.signedCookies.session;
-        if(!token){
-            throw new AppError("Error al cerrar la sesion, falta el token", 400);
-        }
 
-        res.clearCookie('session');
 
         return true;
     } catch (error) {

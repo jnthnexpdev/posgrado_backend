@@ -182,14 +182,10 @@ export const deleteMyAccount = async(req, res) => {
 
 export const logout = async(req, res) => {
     try {
-        const removeToken = await authService.logOut(req, res);
-        if(!removeToken){
-            return res.status(401).json({
-                success: false,
-                httpCode : 401,
-                message: 'Ha ocurrido un error al cerrar la sesion',
-            });
-        }
+        console.log(req.signedCookies); // Si es signed
+        console.log(req.cookies); // Si no es signed
+
+        res.setHeader('Set-Cookie', 'session=; HttpOnly; Path=/; Max-Age=0');
 
         return res.status(200).json({
             success: false,
