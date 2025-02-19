@@ -8,6 +8,7 @@ import adminModel from '../../models/users/admin_model.mjs';
 import teacherModel from '../../models/users/teacher_model.mjs';
 import studentModel from '../../models/users/student_model.mjs';
 
+// Iniciar sesion
 export const loginUser = async(correo, password) => {
     try {   
         if (!correo || !password) {
@@ -39,6 +40,7 @@ export const loginUser = async(correo, password) => {
     }
 }
 
+// Cerrar sesion
 export const logOut = async(req, res) => {
     try {
 
@@ -49,6 +51,7 @@ export const logOut = async(req, res) => {
     }
 }
 
+// Obtener la informacion de un usario mediante id
 export const dataUser = async(id) => {
     try {
         const isValidId = mongoose.isValidObjectId(id);
@@ -67,6 +70,7 @@ export const dataUser = async(id) => {
     }
 }
 
+// Actualizar la password de un usuario
 export const changeUserPassword = async(id, password) => {
     try {
         const isValidId = mongoose.isValidObjectId(id);
@@ -88,6 +92,7 @@ export const changeUserPassword = async(id, password) => {
     }
 }
 
+// Cambiar el correo de un usuario
 export const changeUserEmail = async(id, email) => {
     try {
         const isValidId = mongoose.isValidObjectId(id);
@@ -128,6 +133,7 @@ export const changeUserEmail = async(id, email) => {
     }
 }
 
+// Eliminar mi propia cuenta 
 export const deleteMyAccount = async(id) => {
     try {
         const isValidId = mongoose.isValidObjectId(id);

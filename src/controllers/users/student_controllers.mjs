@@ -5,6 +5,7 @@ import * as studentService from '../../services/users/student_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 import { exportStudents } from '../../utils/pdfs/export_students.mjs';
 
+// Crear cuenta de alumno
 export const registerStudentAccount = async(req, res) => {
     try {
         const studentData = req.body;
@@ -29,6 +30,7 @@ export const registerStudentAccount = async(req, res) => {
     }
 }
 
+// Obtener las cuentas de todos los alumnos
 export const allStudentsAccounts = async(req, res) => {
     try {
         const studentsInfo = await studentService.allStudentsUsers(req.query);
@@ -51,6 +53,7 @@ export const allStudentsAccounts = async(req, res) => {
     }
 }
 
+// Exportar en pdf todos los alumnos de un periodo
 export const exportStudentsByPeriodPDF = async(req, res) => {
     try {
         const students = await studentService.allStudentsUsers(req.query);
@@ -75,6 +78,7 @@ export const exportStudentsByPeriodPDF = async(req, res) => {
     }
 }
 
+// Eliminar la cuenta de un alumno mediante id
 export const deleteStudentAccount = async(req, res) => {
     try {
 
@@ -88,7 +92,7 @@ export const deleteStudentAccount = async(req, res) => {
             });
         }
 
-        await studentService.deleteStudentsUser(id);
+        await studentService.deleteStudentUser(id);
 
         return res.status(201).json({
             success : true,

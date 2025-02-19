@@ -3,7 +3,7 @@ import * as authService from '../../services/users/auth_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 
-
+// Inicio de sesion mediante correo
 export const login = async(req, res) => {
     try {
         const { correo, password } = req.body;
@@ -12,7 +12,7 @@ export const login = async(req, res) => {
         // Configurar la cookie de sesión (opcional)
         res.cookie('session', token, {
             httpOnly: false, // Proteger la cookie del acceso por JavaScript
-            signed: true, // Asegurarse de que la cookie esté firmada
+            signed: true,
         });
 
         return res.status(200).json({
@@ -33,6 +33,7 @@ export const login = async(req, res) => {
     }
 }
 
+// Obtener la informacion de un usario
 export const dataUser = async(req, res) => {
     try {
         const user = await userUtils.getDataUserFromCookie(req);
@@ -64,6 +65,7 @@ export const dataUser = async(req, res) => {
     }
 }
 
+// Obtener el tipo de cuenta de un usuario
 export const userTypeAccount = async(req, res) => {
     try {
         const user = await userUtils.getDataUserFromCookie(req);
@@ -92,6 +94,7 @@ export const userTypeAccount = async(req, res) => {
     }
 }
 
+// Cambiar la password de un usuario
 export const changePassword = async(req, res) => {
     try {
         const userInfo = await userUtils.getDataUserFromCookie(req);
@@ -121,6 +124,7 @@ export const changePassword = async(req, res) => {
     }
 }
 
+// Cambiar la direccion de correo de un usuario
 export const changeEmail = async(req, res) => {
     try {
         const userInfo = await userUtils.getDataUserFromCookie(req);
@@ -150,6 +154,7 @@ export const changeEmail = async(req, res) => {
     }
 }
 
+// Eliminiar mi cuenta
 export const deleteMyAccount = async(req, res) => {
     try {
         const user = await userUtils.getDataUserFromCookie(req);
@@ -180,6 +185,7 @@ export const deleteMyAccount = async(req, res) => {
     }
 }
 
+// Cerrar sesion
 export const logout = async(req, res) => {
     try {
         console.log(req.signedCookies); // Si es signed

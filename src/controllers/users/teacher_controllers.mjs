@@ -5,6 +5,7 @@ import * as teacherService from '../../services/users/teacher_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 import { exportTeachers } from '../../utils/pdfs/export_teacher.mjs';
 
+// Crear la cuenta de un asesor
 export const registerTeacherAccount = async(req, res) => {
     try {
         const teacherData = req.body;
@@ -29,6 +30,7 @@ export const registerTeacherAccount = async(req, res) => {
     }
 }
 
+// Obtener las cuentas de todos los asesores
 export const allTeachersAccounts = async(req, res) => {
     try {
         const teachersInfo = await teacherService.allTeachersUsers(req.query);
@@ -52,6 +54,7 @@ export const allTeachersAccounts = async(req, res) => {
     }
 }
 
+// Exportar en pdf todos los asesores
 export const exportTeachersPDF = async (req, res) => {
     try {
         console.time('TotalTime'); // Inicio del contador general
@@ -85,7 +88,7 @@ export const exportTeachersPDF = async (req, res) => {
     }
 }
 
-
+// Eliminar la cuenta de un asesor mediante id
 export const deleteTeacherAccount = async(req, res) => {
     try {
 

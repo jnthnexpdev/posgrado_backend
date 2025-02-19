@@ -4,6 +4,7 @@ import AppError from '../../utils/errors/server_errors.mjs';
 import * as adminService from '../../services/users/admin_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 
+// Crear una cuenta de administrador
 export const registerAdminAccount = async(req, res) => {
     try {
         const adminData = req.body;
@@ -28,6 +29,7 @@ export const registerAdminAccount = async(req, res) => {
     }
 }
 
+// Obtener todos los administradores
 export const allAdminsAccounts = async(req, res) => {
     try {
         const adminsInfo = await adminService.allAdminsUsers(req.query);
@@ -50,6 +52,7 @@ export const allAdminsAccounts = async(req, res) => {
     }
 }
 
+// Eliminar un administrador mediante id
 export const deleteAdminAccount = async(req, res) => {
     try {
 

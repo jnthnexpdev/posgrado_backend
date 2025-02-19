@@ -2,6 +2,7 @@ import teacherModel from '../../models/users/teacher_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
 
+// Guardar la informacion de un asesor en el sistema
 export const saveTeacherUser = async(teacherData) => {
     try{
         const { hora, fecha } = await getDateTime();
@@ -31,6 +32,7 @@ export const saveTeacherUser = async(teacherData) => {
     }
 }
 
+// Obtener la informacion de todos los asesores registrados en el sistema
 export const allTeachersUsers = async(queryParams) => {
     try {
         const { search = '', page = 1, pageSize = 10 } = queryParams;
@@ -69,6 +71,7 @@ export const allTeachersUsers = async(queryParams) => {
     }
 }
 
+// Eliminar un asesor mediante id
 export const deleteTeacherUser = async(id) => {
     try {
         const deleteTeacher = await teacherModel.findByIdAndDelete(id);

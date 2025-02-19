@@ -4,6 +4,7 @@ import AppError from '../../utils/errors/server_errors.mjs';
 
 import mongoose from 'mongoose';
 
+// Registrar periodo en el sistema
 export const registerNewPeriod = async(periodData) => {
     try {
         const { hora, fecha } = await getDateTime();
@@ -26,6 +27,7 @@ export const registerNewPeriod = async(periodData) => {
     }
 }
 
+// Agregar alumno a un periodo seleccionado
 export const addStudentToPeriod = async(idStudent, idPeriod) => {
     try {
         const period = await periodModel.findById(idPeriod);
@@ -47,6 +49,7 @@ export const addStudentToPeriod = async(idStudent, idPeriod) => {
     }
 }
 
+// Obtener la informacion de todos los periodos registrados en el sistema
 export const allPeriods = async(queryParams) => {
     try {
         let { search = '', page = 1, pageSize = 20 } = queryParams;
@@ -82,6 +85,7 @@ export const allPeriods = async(queryParams) => {
     }
 }
 
+// Informacion de todos los estudiantes de un periodo seleccionado
 export const studentsDataByPeriod = async (idPeriod, queryParams) => {
     try {
         const { search = '', page = 1, pageSize = 10 } = queryParams;
@@ -149,6 +153,7 @@ export const studentsDataByPeriod = async (idPeriod, queryParams) => {
     }
 };
 
+// Eliminar un periodo mediante id
 export const deletePeriodById = async(idPeriod) => {
     try {
         const period = await periodModel.findByIdAndDelete(idPeriod);

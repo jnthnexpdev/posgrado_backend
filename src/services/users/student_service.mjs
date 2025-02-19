@@ -2,6 +2,7 @@ import studenModel from '../../models/users/student_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
 
+// Guardar la informacion de un alumno
 export const saveStudentUser = async(studentData) => {
     try{
         const { hora, fecha } = await getDateTime();
@@ -32,6 +33,7 @@ export const saveStudentUser = async(studentData) => {
     }
 }
 
+// Obtener la informacion de todos los alumnos
 export const allStudentsUsers = async(queryParams) => {
     try {
         const { search = '', page = 1, pageSize = 10 } = queryParams;
@@ -70,7 +72,8 @@ export const allStudentsUsers = async(queryParams) => {
     }
 }
 
-export const deleteStudentsUser = async(id) => {
+// Eliminar un alumno mediante id
+export const deleteStudentUser = async(id) => {
     try {
         const deleteStudent = await studenModel.findByIdAndDelete(id);
 

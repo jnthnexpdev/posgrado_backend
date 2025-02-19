@@ -2,6 +2,7 @@ import adminModel from '../../models/users/admin_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
 
+// Guardar nuevo administrador 
 export const saveAdminUser = async(adminData) => {
     try{
         const { hora, fecha } = await getDateTime();
@@ -31,6 +32,7 @@ export const saveAdminUser = async(adminData) => {
     }
 }
 
+// Obtener la informacion de todos los administradores en el sistema
 export const allAdminsUsers = async(queryParams) => {
     try {
         const { search = '', page = 1, pageSize = 10 } = queryParams;
@@ -69,6 +71,7 @@ export const allAdminsUsers = async(queryParams) => {
     }
 }
 
+// Eliminar un administrador mediante id
 export const deleteAdminUser = async(id) => {
     try {
         const deleteAdmin = await adminModel.findByIdAndDelete(id);

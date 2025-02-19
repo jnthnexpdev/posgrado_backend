@@ -5,6 +5,7 @@ import * as periodService from '../../services/entities/period_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 import { exportPeriods } from '../../utils/pdfs/export_periods.mjs';
 
+// Registrar nuevo periodo
 export const registerPeriod = async(req, res) => {
     try{
         const periodData = req.body.periodo;
@@ -28,6 +29,7 @@ export const registerPeriod = async(req, res) => {
     }
 }
 
+// Agregar un alumno a determinado periodo
 export const addStudentToPeriod = async(req, res) => {
     try {
         const isIdPeriodValid = mongoose.isValidObjectId(req.params.idPeriod);
@@ -67,6 +69,7 @@ export const addStudentToPeriod = async(req, res) => {
     }
 }
 
+// Alumnos filtrados por periodo
 export const studentsByPeriod = async(req, res) => {
     try {
         const idIsValid = mongoose.isValidObjectId(req.params.id);
@@ -98,6 +101,7 @@ export const studentsByPeriod = async(req, res) => {
     }
 }
 
+// Informacion de todos los periodos
 export const allPeriods = async(req, res) => {
     try {
        const periods = await periodService.allPeriods(req.query); 
@@ -121,6 +125,7 @@ export const allPeriods = async(req, res) => {
     }
 }
 
+// Exportar en pdf todos los periodos
 export const exportPeriodsPDF = async(req, res) => {
     try {
         const periods = await periodService.allPeriods(req.query); 
@@ -145,6 +150,7 @@ export const exportPeriodsPDF = async(req, res) => {
     }
 }
 
+// Eliminar periodo mediante id
 export const deletePeriod = async(req, res) => {
     try {
         const isIdValid = mongoose.isValidObjectId(req.params.id);
