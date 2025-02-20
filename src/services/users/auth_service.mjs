@@ -84,7 +84,7 @@ export const changeUserPassword = async(id, password) => {
         }
 
         user.password = password;
-        user.save();
+        await user.save();
 
         return true;
     } catch (error) {

@@ -5,6 +5,7 @@ import * as tesisService from '../../services/entities/tesis_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 
+// REgistrar una nueva tesis
 export const registerTesis = async(req, res) => {
     try {
         const student = await userUtils.getDataUserFromCookie(req);
@@ -55,6 +56,7 @@ export const registerTesis = async(req, res) => {
     }
 }
 
+// Obtener la tesis de un alumno
 export const getTesisByStudent = async(req, res) => {
     try {
         const student = await userUtils.getDataUserFromCookie(req);
@@ -73,6 +75,39 @@ export const getTesisByStudent = async(req, res) => {
             message : 'Tesis encontrada',
             tesis
         });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+// Actualizar datos de una tesis {titulo, url, area de conocimiento, resumen}
+export const updateTesisInfo = async(req, res) => {
+    try {
+        const id = req.params.id;
+        const isIdValid = mongoose.isValidObjectId(id);
+        if(!isIdValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id tesis invalido'
+            });
+        }
+
+        await tesisService.updateTesis(id, req.body);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Informacion tesis actualizada'
+        });
+
     } catch (error) {
         if (error instanceof AppError){
             return res.status(error.httpCode).json({

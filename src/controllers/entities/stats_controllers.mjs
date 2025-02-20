@@ -4,6 +4,7 @@ import AppError from '../../utils/errors/server_errors.mjs';
 import * as statsService from '../../services/entities/stats_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 
+// Generar estadisticas del sistema
 export const getStatsSystem = async(req, res) => {
     try {
         const stats = await statsService.statsSystem();

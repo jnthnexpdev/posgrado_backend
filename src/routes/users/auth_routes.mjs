@@ -15,6 +15,7 @@ router.get('/informacion-usuario', authControllers.dataUser);
 router.get('/tipo-usuario', authControllers.userTypeAccount);
 router.patch('/cambiar-password', authControllers.changePassword);
 router.patch('/cambiar-correo', authControllers.changeEmail);
+router.patch('/actualizar-usuarios', authControllers.updateUsers);
 router.delete('/eliminar-mi-cuenta', authControllers.deleteMyAccount);
 
 export default router;

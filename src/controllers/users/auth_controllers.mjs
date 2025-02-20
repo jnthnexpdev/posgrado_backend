@@ -3,6 +3,10 @@ import * as authService from '../../services/users/auth_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 
+import studentModel from '../../models/users/student_model.mjs';
+import adminModel from '../../models/users/admin_model.mjs';
+import teacherModel from '../../models/users/teacher_model.mjs';
+
 // Inicio de sesion mediante correo
 export const login = async(req, res) => {
     try {
@@ -151,6 +155,29 @@ export const changeEmail = async(req, res) => {
             });
         }
         handleServerError(res, error);
+    }
+}
+
+// Agregar campo sesionIniciada a los registros existentes.
+export const updateUsers = async(req, res) => {
+    try {
+        await adminModel.updateMany(
+            {}, 
+            { $set : { 'sesion.sesionIniciada' : false } }
+        );
+
+        await teacherModel.updateMany(
+            {},
+            { $set : { 'sesion.sesionIniciada' : false } }
+        );
+
+        await studentModel.updateMany(
+            {},
+            { $set : { 'sesion.sesionIniciada' : false } }
+        );
+
+    } catch (error) {
+        console.error(error);
     }
 }
 

@@ -11,5 +11,6 @@ const router = express.Router();
 router.use(cookieParser(secret));
 router.post('/registrar-tesis', tesisControllers.registerTesis);
 router.get('/buscar-tesis-alumno', tesisControllers.getTesisByStudent);
+router.put('/editar-informacion/:id', tesisControllers.updateTesisInfo);
 
 export default router;

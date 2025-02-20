@@ -19,6 +19,7 @@ const teacherModel = new schema({
     fechaRegistro: { type: String },
     horaRegistro: { type: String },
     sesion: {
+        sesionIniciada : { type : Boolean, default : false },
         ultimaSesion: { type: String },
         codigoAcceso: { type: String },
         validezCodigo: { type: Boolean } 

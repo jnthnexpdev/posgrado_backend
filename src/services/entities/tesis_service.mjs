@@ -34,10 +34,35 @@ export const getTesisByStudent = async(idStudent) => {
     try {
         const tesis = await tesisModel.findOne({ alumno : idStudent });
         if(!tesis){
-            throw new AppError("No hay una tesis vinculada al alumno");
+            throw new AppError("No hay una tesis vinculada al alumno", 404);
         }
 
         return tesis;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Actualizar datos de una tesis
+export const updateTesis = async(idTesis, tesisData) => {
+    try {
+        // Validar si la tesis existe
+        const tesis = await tesisModel.findById(idTesis);
+        if(!tesis){
+            throw new AppError("Tesis no encontrada", 404);
+        }
+
+        const updateFields = {};
+
+        // Validar campos a actualizar
+        if(tesisData.titulo){ updateFields.titulo = tesisData.titulo }
+        if(tesisData.url){ updateFields.url = tesisData.url }
+        if(tesisData.areaConocimiento){ updateFields.areaConocimiento = tesisData.areaConocimiento }
+        if(tesisData.resumen){ updateFields.resumen = tesisData.resumen }
+
+        const updateTesisInfo = await tesisModel.findByIdAndUpdate(idTesis, updateFields, { new : true });
+
+        return updateTesisInfo;
     } catch (error) {
         throw error;
     }
