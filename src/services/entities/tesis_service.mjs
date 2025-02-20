@@ -1,10 +1,12 @@
 import { getDateTime } from '../../utils/datetime.mjs';
 import tesisModel from '../../models/entities/tesis_model.mjs';
+import advisorAssignmentModel from '../../models/entities/advisor_assingnment_model.mjs'
 import AppError from '../../utils/errors/server_errors.mjs';
 
 // Registrar nueva tesis
-export const registerTesis = async(tesisData, idStudent, idTeacher) => {
+export const registerTesis = async(tesisData, idStudent) => {
     try {
+        const assignment = await advisorAssignmentModel.findOne({ 'alumno.alumnoId' : idStudent });
 
         const tesisDuplicated = await tesisModel.findOne({ alumno : idStudent });
         if(tesisDuplicated){
@@ -16,7 +18,7 @@ export const registerTesis = async(tesisData, idStudent, idTeacher) => {
         const newTesis = new tesisModel({
             titulo : tesisData.titulo,
             alumno : idStudent,
-            asesor : idTeacher,
+            asesor : assignment.asesor.asesorId,
             fechaInicio : fecha,
             areaConocimiento : tesisData.areaConocimiento,
         });
