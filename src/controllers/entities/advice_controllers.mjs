@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 import AppError from '../../utils/errors/server_errors.mjs';
-import * as assignmentService from '../../services/entities/advisor_assingnment_service.mjs';
+import * as advisorService from '../../services/entities/advisor_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 import { exportAdvised } from "../../utils/pdfs/export_advised.mjs";
@@ -27,7 +27,7 @@ export const registerAdviced = async(req, res) => {
         }
 
         const controlNumber = req.body.numeroControl;
-        const advisorAssignment = await assignmentService.advisorAssignment(teacherData._id, controlNumber, req.body);
+        const advisorAssignment = await advisorService.advisorAssignment(teacherData._id, controlNumber, req.body);
         
         return res.status(201).json({
             success : true,
@@ -59,7 +59,7 @@ export const searchAdvisedsByTeacher = async(req, res) => {
             });
         }
 
-        const adviseds = await assignmentService.studentsAdvised(teacher._id, req.params.period, req.query);
+        const adviseds = await advisorService.studentsAdvised(teacher._id, req.params.period, req.query);
 
         if(adviseds.students.length <= 0){
             return res.status(400).json({
@@ -98,7 +98,7 @@ export const advisorInfo = async(req, res) => {
             });
         }
 
-        const assignment = await assignmentService.searchTeacher(student._id);
+        const assignment = await advisorService.searchTeacher(student._id);
         return res.status(200).json({
             success : true,
             httpCode : 200,
@@ -129,7 +129,7 @@ export const counterAdvised = async(req, res) => {
             });
         }
 
-        const counter = await assignmentService.studentCounterAdvised(teacher._id);
+        const counter = await advisorService.studentCounterAdvised(teacher._id);
 
         return res.status(200).json({
             success : true,
@@ -161,7 +161,7 @@ export const detailsAdvice = async(req, res) => {
             });
         }
 
-        const { assignment, student, teacher } = await assignmentService.detailsAdvice(req.params.id);
+        const { assignment, student, teacher } = await advisorService.detailsAdvice(req.params.id);
         
         return res.status(200).json({
             success : true,
@@ -195,7 +195,7 @@ export const exportAdvicedByPeriodPDF = async(req, res) => {
             });
         }
         
-        const students = await assignmentService.studentsAdvised(teacher._id, req.params.period, req.query);
+        const students = await advisorService.studentsAdvised(teacher._id, req.params.period, req.query);
 
         const buffer = await exportAdvised(students.students, teacher.nombre, req.params.period);
         res.writeHead(200, {
@@ -229,7 +229,7 @@ export const deleteAdviced = async(req, res) => {
             });
         }
 
-        await assignmentService.deleteAdvisor(req.params.id);
+        await advisorService.deleteAdvisor(req.params.id);
         
         return res.status(200).json({
             success : true,

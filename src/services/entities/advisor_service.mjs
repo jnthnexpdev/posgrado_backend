@@ -1,4 +1,4 @@
-import advisorAssignmentModel from '../../models/entities/advisor_assingnment_model.mjs';
+import advisorAssignmentModel from '../../models/entities/advisor_model.mjs';
 import studentModel from '../../models/users/student_model.mjs';
 import teacherModel from '../../models/users/teacher_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';

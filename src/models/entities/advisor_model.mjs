@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const schema = mongoose.Schema;
 
-const advisorAssignmentModel = new schema({
+const advisorModel = new schema({
     asesor: {
         asesorId : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
         nombre : { type : String, required : true, trim: true },
@@ -17,6 +17,6 @@ const advisorAssignmentModel = new schema({
     notas : { type : String, required : false }
 });
 
-const advisorAssignment = mongoose.model('Asesorados', advisorAssignmentModel);
+const advisorAssignment = mongoose.model('Asesorados', advisorModel);
 
 export default advisorAssignment;

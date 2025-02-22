@@ -8,7 +8,7 @@ const assingmentModel = new schema({
     fechaLimite : { type : String, required : true },
     periodo : { type : String, required : true },
     asesor : {
-       idAsesor : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
+        idAsesor : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
         nombreAsesor : { type : String, required : true }
     },
     alumnos : [{
