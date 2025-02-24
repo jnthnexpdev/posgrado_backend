@@ -257,7 +257,7 @@ export const logout = async(req, res) => {
         const user = await userUtils.getDataUserFromCookie(req);
         await authService.logOut(user);
 
-        res.setHeader('Set-Cookie', 'session=; HttpOnly; Path=/; Max-Age=0');
+        res.setHeader('Set-Cookie', 'session=; Path=/; Max-Age=0');
 
         return res.status(200).json({
             success: false,
