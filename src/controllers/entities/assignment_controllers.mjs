@@ -44,7 +44,8 @@ export const assignmentsOfAdvisorByPeriod = async(req, res) => {
             success : true,
             httpCode : 200,
             message : 'Asignaciones encontradas',
-            assignments
+            assignments : assignments.assignments,
+            pagination : assignments.pagination
         });
     } catch (error) {
         if (error instanceof AppError){

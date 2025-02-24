@@ -40,19 +40,19 @@ export async function updateLastSession(email, account){
         if(account === 'Coordinador'){
             await adminModel.findOneAndUpdate(
                 { correo : email },
-                { 'sesion.ultimaSesion' : dateTime },
+                { 'sesion.ultimaSesion' : dateTime, 'sesion.sesionIniciada' : true },
                 { new : true }
             );
         }else if(account === 'Asesor'){
             await teacherModel.findOneAndUpdate(
-                { correo : email },
-                { 'sesion.ultimaSesion' : dateTime },
+                { correo : email},
+                { 'sesion.ultimaSesion' : dateTime, 'sesion.sesionIniciada' : true },
                 { new : true }
             );
         }else if(account === 'Alumno'){
             await studentModel.findOneAndUpdate(
-                { correo : email },
-                { 'sesion.ultimaSesion' : dateTime },
+                { correo : email, },
+                { 'sesion.ultimaSesion' : dateTime, 'sesion.sesionIniciada' : true },
                 { new : true }
             );
         }
@@ -65,19 +65,19 @@ export async function updateLastSession(email, account){
 
 export async function updateSessionCode(user, code){
     try {
-        if(user.cuenta === 'Coordinador'){
+        if(user.tipoCuenta === 'Coordinador'){
             await adminModel.findOneAndUpdate(
                 { correo : user.correo },
                 { 'sesion.codigoAcceso' : code, 'sesion.validezCodigoAcceso' : true },
                 { new : true }
             );
-        }else if(user.cuenta === 'Asesor'){
+        }else if(user.tipoCuenta === 'Asesor'){
             await teacherModel.findOneAndUpdate(
                 { correo : user.correo },
                 { 'sesion.codigoAcceso' : code, 'sesion.validezCodigoAcceso' : true },
                 { new : true }
             );
-        }else if(user.cuenta === 'Alumno'){
+        }else if(user.tipoCuenta === 'Alumno'){
             await studentModel.findOneAndUpdate(
                 { correo : user.correo },
                 { 'sesion.codigoAcceso' : code, 'sesion.validezCodigoAcceso' : true },
@@ -94,19 +94,19 @@ export async function updateSessionCode(user, code){
 export async function updateSessionCodeValidity (user){
     try{
 
-        if(user.cuenta === 'Coordinador'){
+        if(user.tipoCuenta === 'Coordinador'){
             await adminModel.findOneAndUpdate(
                 { correo : user.correo },
                 { 'sesion.codigoAcceso' : null, 'sesion.validezCodigoAcceso' : false },
                 { new : true }
             );
-        }else if(user.cuenta === 'Asesor'){
+        }else if(user.tipoCuenta === 'Asesor'){
             await teacherModel.findOneAndUpdate(
                 { correo : user.correo },
                 { 'sesion.codigoAcceso' : null, 'sesion.validezCodigoAcceso' : false  },
                 { new : true }
             );
-        }else if(user.cuenta === 'Alumno'){
+        }else if(user.tipoCuenta === 'Alumno'){
             await studentModel.findOneAndUpdate(
                 { correo : user.correo },
                 { 'sesion.codigoAcceso' : null, 'sesion.validezCodigoAcceso' : false  },

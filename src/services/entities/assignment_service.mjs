@@ -54,7 +54,7 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
 
         return {
             assignments,
-            pagination: {
+            pagination : {
                 total,
                 page: Number(page),
                 pageSize: Number(pageSize),

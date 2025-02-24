@@ -40,17 +40,6 @@ export const loginUser = async(correo, password) => {
     }
 }
 
-// Cerrar sesion
-export const logOut = async(req, res) => {
-    try {
-
-
-        return true;
-    } catch (error) {
-        throw error;
-    }
-}
-
 // Obtener la informacion de un usario mediante id
 export const dataUser = async(id) => {
     try {
@@ -158,6 +147,35 @@ export const deleteMyAccount = async(id) => {
                 break;
             default: 
                 throw new AppError("Tipo de cuenta invalida", 400);
+        }
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Cerrar sesion
+export const logOut = async(user) => {
+    try {
+        if(user.tipoCuenta === 'Coordinador'){
+            await adminModel.findByIdAndUpdate(
+                user._id,
+                { $set: { 'sesion.sesionIniciada': false } },
+                { new : true }
+            );
+        }else if(user.tipoCuenta === 'Asesor'){
+            await teacherModel.findByIdAndUpdate(
+                user._id,
+                { $set: { 'sesion.sesionIniciada': false } },
+                { new : true }
+            );
+        }else if(user.tipoCuenta === 'Alumno'){
+            await studentModel.findByIdAndUpdate(
+                user._id,
+                { $set: { 'sesion.sesionIniciada': false } },
+                { new : true }
+            );
         }
 
         return true;

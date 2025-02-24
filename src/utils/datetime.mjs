@@ -1,26 +1,39 @@
 import axios from 'axios';
 import moment from 'moment';
 
+const apiUrls = [
+  'https://timeapi.io/api/Time/current/zone?timeZone=America/Mexico_City',
+  'http://worldtimeapi.org/api/timezone/America/Mexico_City',
+  'https://api.timezonedb.com/v2.1/get-time-zone?key=TU_API_KEY&format=json&by=zone&zone=America/Mexico_City'
+];
+
 export const getDateTime = async () => {
+  console.time('Tiempo de respuesta'); // Inicia contador
+
   try {
-    // Intenta obtener los datos de la primera API
-    const response = await axios.get('https://timeapi.io/api/Time/current/zone?timeZone=America/Mexico_City');
-    return formatDateTime(response.data.datetime);
+    const response = await Promise.race(
+      apiUrls.map(url => axios.get(url, { timeout: 1000 })) // Timeout de 1s
+    );
+
+    console.timeEnd('Tiempo de respuesta'); // Finaliza contador
+    return formatDateTime(extractDateTime(response.data));
   } catch (error) {
-    try {
-      // Si falla la primera API, intenta con la segunda
-      const backupResponse = await axios.get('http://worldtimeapi.org/api/timezone/America/Mexico_City');
-      return formatDateTime(backupResponse.data.dateTime);
-    } catch (backupError) {
-      console.error('Ambas APIs fallaron al obtener la hora y fecha.');
-      throw backupError;
-    }
+    console.warn('⚠️ Todas las APIs tardaron demasiado o fallaron. Usando hora local.');
+
+    console.timeEnd('Tiempo de respuesta'); // Finaliza contador incluso si hay error
+    return formatDateTime(new Date());
   }
 };
 
-// Función para formatear la fecha y hora
+// Extrae la fecha/hora dependiendo de la API
+const extractDateTime = (data) => {
+  return data.datetime || data.dateTime || data.utc_datetime || data.formatted || new Date().toISOString();
+};
+
+// Formatea la fecha y hora
 const formatDateTime = (datetime) => {
-  const formatDate = moment(datetime).format('DD-MM-YYYY');
-  const formatTime = moment(datetime).format('h:mm A');
-  return { fecha: formatDate, hora: formatTime };
+  return {
+    fecha: moment(datetime).format('DD-MM-YYYY'),
+    hora: moment(datetime).format('h:mm A')
+  };
 };

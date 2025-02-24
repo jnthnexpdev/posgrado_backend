@@ -37,6 +37,45 @@ export const login = async(req, res) => {
     }
 }
 
+// Verificar si el usuario ha iniciado sesion
+export const userAuth = async(req, res) => {
+    try {
+        if(!req.signedCookies){
+            return res.status(200).json({
+                success : false,
+                httpCode : 200,
+                message : 'Usuario no autenticado'
+            });
+        }
+
+        const user = await userUtils.getDataUserFromCookie(req);
+        if(user.sesion.sesionIniciada === false){
+            return res.status(200).json({
+                success : false,
+                httpCode : 200,
+                message : 'Usuario no autenticado'
+            });
+        }
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Usuario autenticado'
+        });
+
+        res.setHeader('Set-Cookie', 'session=; HttpOnly; Path=/; Max-Age=0');
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
 // Obtener la informacion de un usario
 export const dataUser = async(req, res) => {
     try {
@@ -215,8 +254,8 @@ export const deleteMyAccount = async(req, res) => {
 // Cerrar sesion
 export const logout = async(req, res) => {
     try {
-        console.log(req.signedCookies); // Si es signed
-        console.log(req.cookies); // Si no es signed
+        const user = await userUtils.getDataUserFromCookie(req);
+        await authService.logOut(user);
 
         res.setHeader('Set-Cookie', 'session=; HttpOnly; Path=/; Max-Age=0');
 

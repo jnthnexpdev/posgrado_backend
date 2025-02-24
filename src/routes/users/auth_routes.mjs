@@ -13,6 +13,7 @@ router.post('/iniciar-sesion', authControllers.login);
 router.post('/cerrar-sesion', authControllers.logout);
 router.get('/informacion-usuario', authControllers.dataUser);
 router.get('/tipo-usuario', authControllers.userTypeAccount);
+router.get('/usuario-autenticado', authControllers.userAuth);
 router.patch('/cambiar-password', authControllers.changePassword);
 router.patch('/cambiar-correo', authControllers.changeEmail);
 router.patch('/actualizar-usuarios', authControllers.updateUsers);
