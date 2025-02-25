@@ -49,6 +49,10 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
             .find({ 'asesor.idAsesor' : idTeacher, periodo : period })
             .skip((page - 1) * pageSize)
             .limit(pageSize);
+        
+        if(!assignments){
+            throw new AppError("No hay asignaciones en este periodo");
+        }
 
         const total = await assingmentModel.countDocuments({ 'asesor.idAsesor' : idTeacher, periodo : period });
 
@@ -61,6 +65,22 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
                 totalPages: Math.ceil(total / pageSize)
             }
         };
+    } catch (error) {
+        throw new error;
+    }
+}
+
+// Eliminar asignacion de un asesor mediante id
+export const deleteAssingmentById = async(idAssingment) => {
+    try {
+        const assignment = await assingmentModel.findById(idAssingment);
+        if(!assignment){
+            throw new AppError("La asignacion no existe", 404);
+        }
+
+        await assingmentModel.findByIdAndDelete(idAssingment);
+
+        return true;
     } catch (error) {
         throw new error;
     }

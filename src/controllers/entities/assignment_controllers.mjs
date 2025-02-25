@@ -58,3 +58,34 @@ export const assignmentsOfAdvisorByPeriod = async(req, res) => {
         handleServerError(res, error);
     }
 }
+
+// Eliminar asignacion mediante id
+export const deleteAssingment = async(req, res) => {
+    try {
+        const isIdValid = mongoose.isValidObjectId(req.params.id);
+        if(!isIdValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id asignacion invalido'
+            });
+        }
+
+        await assignmentService.deleteAssingmentById(req.params.id);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Asignacion eliminada'
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
