@@ -11,6 +11,7 @@ const router = express.Router();
 router.use(cookieParser(secret));
 router.post('/crear-asignacion', assignmentControllers.registerAssignment);
 router.get('/obtener-asignaciones-asesor-periodo/:period', assignmentControllers.assignmentsOfAdvisorByPeriod);
+router.patch('/editar-asignacion/:id', assignmentControllers.updateAssignment);
 router.delete('/eliminar-asignacion/:id', assignmentControllers.deleteAssingment);
 
 export default router;

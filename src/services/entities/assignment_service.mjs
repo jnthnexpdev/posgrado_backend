@@ -49,12 +49,12 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
             .find({ 'asesor.idAsesor' : idTeacher, periodo : period })
             .skip((page - 1) * pageSize)
             .limit(pageSize);
-        
-        if(!assignments){
-            throw new AppError("No hay asignaciones en este periodo");
-        }
 
         const total = await assingmentModel.countDocuments({ 'asesor.idAsesor' : idTeacher, periodo : period });
+
+        if(total === 0){
+            throw new AppError("No hay asignaciones en este periodo", 404);
+        }
 
         return {
             assignments,
@@ -65,6 +65,30 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
                 totalPages: Math.ceil(total / pageSize)
             }
         };
+    } catch (error) {
+        throw new error;
+    }
+}
+
+export const updateAssignmentData = async(idAssignment, data) => {
+    try {
+        // Validar si la tesis existe
+        const assignment = await assingmentModel.findById(idAssignment);
+        if(!assignment){
+            throw new AppError("Asignacion no encontrada", 404);
+        }
+
+        const updateFields = {};
+
+        // Validar campos a actualizar
+        if(assignment.nombre){ updateFields.nombre = data.nombre }
+        if(assignment.descripcion){ updateFields.descripcion = data.descripcion }
+        if(assignment.periodo){ updateFields.periodo = data.periodo }
+        if(assignment.fechaLimite){ updateFields.fechaLimite = data.fechaLimite }
+
+        const updateAssignmentInfo = await assingmentModel.findByIdAndUpdate(idAssignment, updateFields, { new : true });
+
+        return updateAssignmentInfo;
     } catch (error) {
         throw new error;
     }
