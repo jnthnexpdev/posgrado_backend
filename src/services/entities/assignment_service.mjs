@@ -70,6 +70,21 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
     }
 }
 
+// Buscar una asignacion mediante id 
+export const assignmentById = async(idAssignment) => {
+    try {
+        const assignment = await assingmentModel.findById(idAssignment);
+        if(!assignment){
+            throw new AppError("La asignacion no existe", 404);
+        }
+
+        return assignment;
+    } catch (error) {
+        throw new error;
+    }
+}
+
+// Actualizar informacion de la asignacion
 export const updateAssignmentData = async(idAssignment, data) => {
     try {
         // Validar si la tesis existe

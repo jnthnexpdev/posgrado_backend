@@ -59,6 +59,37 @@ export const assignmentsOfAdvisorByPeriod = async(req, res) => {
     }
 }
 
+export const getAssignmentById = async(req, res) => {
+    try {
+        const id = req.params.id;
+        const isIdValid = mongoose.isValidObjectId(id);
+        if(!isIdValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id asignacion invalido'
+            });
+        }
+
+        const assignment = await assignmentService.assignmentById(id);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            assignment : assignment
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
 // Actualizar datos de una asignacion {titulo, descripcion, periodo, fecha limite}
 export const updateAssignment = async(req, res) => {
     try {
