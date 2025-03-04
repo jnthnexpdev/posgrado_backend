@@ -69,6 +69,17 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
     }
 }
 
+export const getAssignmentByStudent = async(idStudent, period) => {
+    try {
+        const assignments = await assingmentModel
+        .find({ periodo : period, 'alumnos.idAlumno' : idStudent })
+
+        return assignments;
+    } catch (error) {
+        throw new error;
+    }
+}
+
 // Buscar una asignacion mediante id 
 export const assignmentById = async(idAssignment) => {
     try {

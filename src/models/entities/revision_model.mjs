@@ -10,7 +10,7 @@ const revisionModel = new schema({
     tesis : { type : mongoose.Schema.Types.ObjectId, ref : 'Tesis' },
     linkEntrega : { type : String, trim : true },
     fechaEntrega : { type : String, trim : true },
-    calificacion : { type : Numbrer, default : null, min : 0, max : 100 },
+    calificacion : { type : Number, default : null, min : 0, max : 100 },
     comentarios : [
         {
             nombreUsuario : { type : String, required : true },

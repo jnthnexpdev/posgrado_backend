@@ -60,6 +60,31 @@ export const assignmentsOfAdvisorByPeriod = async(req, res) => {
     }
 }
 
+export const assignmentsOfStudent = async(req, res) => {
+    try {
+        const period = req.params.period;
+        const idStudent = await userUtils.getDataUserFromCookie(req);
+        const assignments = await assignmentService.getAssignmentByStudent(idStudent, period);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Asignaciones encontrada',
+            assignments
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+// Obtener la informacion de una asignacion mediante id
 export const getAssignmentById = async(req, res) => {
     try {
         const id = req.params.id;
