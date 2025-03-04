@@ -1,8 +1,6 @@
-import studentModel from '../../models/users/student_model.mjs';
 import advisorModel from '../../models/entities/advisor_model.mjs'
 import assingmentModel from '../../models/entities/assignment_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
-import * as userUtils from '../../utils/users/data_users.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
 
 // Guardar nueva asignacion y agregar a todos los alumnos
@@ -52,9 +50,10 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
 
         const total = await assingmentModel.countDocuments({ 'asesor.idAsesor' : idTeacher, periodo : period });
 
-        if(total === 0){
-            throw new AppError("No hay asignaciones en este periodo", 404);
+        if (assignments.length === 0) {
+            return Promise.reject(new AppError("No hay asignaciones en este periodo", 404));
         }
+        
 
         return {
             assignments,

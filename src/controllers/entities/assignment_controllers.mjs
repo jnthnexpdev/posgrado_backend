@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import AppError from '../../utils/errors/server_errors.mjs';
+console.log('AppError:', AppError);
 import * as assignmentService from '../../services/entities/assignment_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
