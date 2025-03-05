@@ -60,6 +60,7 @@ export const assignmentsOfAdvisorByPeriod = async(req, res) => {
     }
 }
 
+// Asignaciones de un estudiante en determinado periodo
 export const assignmentsOfStudent = async(req, res) => {
     try {
         const period = req.params.period;

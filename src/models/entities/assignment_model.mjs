@@ -6,6 +6,7 @@ const assingmentModel = new schema({
     descripcion : { type : String, required : true },
     fechaAsignacion : { type : String, required : true },
     fechaLimite : { type : String, required : true },
+    permitirEntrega : { type : Boolean, default : true },
     periodo : { type : String, required : true },
     asesor : {
         idAsesor : { type : mongoose.Schema.Types.ObjectId, ref : 'Asesores', required : true },
