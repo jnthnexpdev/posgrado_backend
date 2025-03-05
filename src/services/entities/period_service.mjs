@@ -1,8 +1,8 @@
+import mongoose from 'mongoose';
+
 import { getDateTime } from '../../utils/datetime.mjs';
 import periodModel from '../../models/entities/period_model.mjs';
-import AppError from '../../utils/errors/server_errors.mjs';
-
-import mongoose from 'mongoose';
+import AppError from '../../utils/errors/server_errors.mjs'
 
 // Registrar periodo en el sistema
 export const registerNewPeriod = async(periodData) => {

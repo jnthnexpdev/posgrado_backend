@@ -10,7 +10,7 @@ export const registerPeriod = async(req, res) => {
     try{
         const periodData = req.body.periodo;
         
-        const period = await periodService.registerNewPeriod(periodData);
+        await periodService.registerNewPeriod(periodData);
 
         return res.status(201).json({
             success : true,

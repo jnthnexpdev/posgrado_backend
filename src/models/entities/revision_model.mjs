@@ -1,4 +1,4 @@
-import mongoose from mongoose;
+import mongoose from 'mongoose';
 const schema = mongoose.Schema;
 
 const revisionModel = new schema({
@@ -14,7 +14,8 @@ const revisionModel = new schema({
         enum: ["pendiente", "entregada", "calificada"], 
         default: "pendiente"  
     },
-    fechaEntrega : { type : String, trim : true },
+    fechaEntrega : { type : String, trim : true }, 
+    horaEntrega : { type : String, trim : true },
     calificacion : { type : Number, default : null, min : 0, max : 100 },
     comentarios : [
         {

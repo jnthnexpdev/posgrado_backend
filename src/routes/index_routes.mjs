@@ -9,6 +9,7 @@ import periodRoutes from '../routes/entities/period_routes.mjs';
 import tesisRoutes from '../routes/entities/tesis_routes.mjs';
 import assignamentRoutes from '../routes/entities/assignment_routes.mjs';
 import statsRoutes from '../routes/entities/stats_routes.mjs';
+import revisionRoutes from '../routes/entities/revision_routes.mjs';
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.use('/api/itc/posgrado/periodos', periodRoutes);
 router.use('/api/itc/posgrado/tesis', tesisRoutes);
 router.use('/api/itc/posgrado/asignaciones', assignamentRoutes);
 router.use('/api/itc/posgrado/estadisticas', statsRoutes);
+router.use('/api/itc/posgrado/revisiones', revisionRoutes);
 
 export default router;
