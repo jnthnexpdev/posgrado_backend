@@ -11,8 +11,8 @@ const revisionModel = new schema({
     linkEntrega : { type : String, trim : true },
     estatusEntrega : { 
         type: String, 
-        enum: ["pendiente", "entregada", "calificada"], 
-        default: "pendiente"  
+        enum: ["Pendiente", "Entregada", "Calificada"], 
+        default: "Pendiente"  
     },
     fechaEntrega : { type : String, trim : true }, 
     horaEntrega : { type : String, trim : true },

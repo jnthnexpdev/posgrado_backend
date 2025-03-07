@@ -104,3 +104,36 @@ export const getRevision = async(req, res) => {
         handleServerError(res, error);
     }
 }
+
+// Asignar una calificacion a la entrega de un alumno
+export const assignRating = async(req, res) => {
+    try {
+        const rating = req.body.calificacion;
+        const idRevision = req.params.idRevision;
+        const isIdValid = mongoose.isValidObjectId(idRevision);
+        if(!isIdValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id revision invalido'
+            });
+        }
+
+        await revisionService.updateRatingOfRevision(idRevision, rating);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Calificación asignada',
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}

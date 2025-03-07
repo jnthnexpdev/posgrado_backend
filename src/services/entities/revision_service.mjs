@@ -22,7 +22,7 @@ export const registerRevision = async(idStudent, assignmentData) => {
             alumno : idStudent,
             tesis : tesis,
             linkEntrega : assignmentData.linkEntrega,
-            estatusEntrega : 'entregada',
+            estatusEntrega : 'Entregada',
             fechaEntrega : fecha,  
             horaEntrega : hora, 
         });
@@ -35,6 +35,7 @@ export const registerRevision = async(idStudent, assignmentData) => {
     }
 }
 
+// Todas las entregas de una asignacion
 export const allRevisionsOfAssignment = async(idAssignment) => {
     try {
         const revisions = await revisionModel.find({idAsignacion : idAssignment});
@@ -70,6 +71,22 @@ export const revisionByStudentAndAssignment = async(idStudent, idAssignment) => 
         const revision = await revisionModel.findOne({ alumno : idStudent, idAsignacion : idAssignment  });
 
         return revision;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Asignar o actualizar la calificacion de la entrega de un alumno
+export const updateRatingOfRevision = async(idRevision, rating) => {
+    try {
+        const revision = await revisionModel.findById(idRevision);
+        if(!revision){
+            throw new AppError("No se ha podido asignar la calificación debido a que la entrega no existe", 404);
+        }
+
+        await revisionModel.findByIdAndUpdate(idRevision, { calificacion : rating }, { new : true });
+
+        return true;
     } catch (error) {
         throw error;
     }
