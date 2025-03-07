@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 import { getDateTime } from '../../utils/datetime.mjs';
 import revisionModel from '../../models/entities/revision_model.mjs';
+import studentModel from '../../models/users/student_model.mjs';
 import tesisModel from '../../models/entities/tesis_model.mjs';
 import AppError from '../../utils/errors/server_errors.mjs'
 
@@ -31,6 +32,35 @@ export const registerRevision = async(idStudent, assignmentData) => {
         return true;
     } catch (error) {
         throw error;
+    }
+}
+
+export const allRevisionsOfAssignment = async(idAssignment) => {
+    try {
+        const revisions = await revisionModel.find({idAsignacion : idAssignment});
+
+        if(!revisions || revisions.length === 0){
+            throw new AppError("Por el momento no ahy entregas para esta asignacion", 404);
+        }
+
+        const idStudents = revisions.map(revision => revision.alumno);
+
+        const students = await studentModel.find({ _id : { $in : idStudents }}, { nombre : 1 });
+
+        const studentMap = students.reduce((acc, student) => {
+            acc[student._id.toString()] = student.nombre;
+            return acc;
+        }, {});
+
+        const revisionsWithNames = revisions.map(revision => ({
+            ...revision.toObject(),
+            nombreAlumno: studentMap[revision.alumno.toString()] || "Desconocido"
+        }));
+
+        return revisionsWithNames;
+
+    } catch (error) {
+        
     }
 }
 
