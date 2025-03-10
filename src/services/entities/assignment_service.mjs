@@ -1,5 +1,6 @@
 import advisorModel from '../../models/entities/advisor_model.mjs'
 import assingmentModel from '../../models/entities/assignment_model.mjs';
+import { studentRevisionsOfAssignments } from '../entities/revision_service.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
 
@@ -69,12 +70,32 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
     }
 }
 
+// Obtener todas las asignaciones de un alumno
 export const getAssignmentByStudent = async(idStudent, period) => {
     try {
         const assignments = await assingmentModel
-        .find({ periodo : period, 'alumnos.idAlumno' : idStudent })
+        .find({ periodo : period, 'alumnos.idAlumno' : idStudent });
 
-        return assignments;
+        /* 
+        Obtener el estatus de la tarea del alumno, en base al id de la asignacion,
+        si el alumno no ha entregado esa tarea, que su estatus de entrega sea pendiente
+        */
+        const assignmentIds = assignments.map(assignment => assignment._id); 
+
+        const revisions = await studentRevisionsOfAssignments(idStudent, assignmentIds);
+
+        const assignmentsWithStatus = assignments.map(assignment => {
+            const revision = revisions.find(rev => rev.idAsignacion.toString() === assignment._id.toString());
+
+            return {
+                ...assignment.toObject(),
+                estatusEntrega : revision ? revision.estatusEntrega : "Pendiente",
+                fechaEntrega : revision ? revision.fechaEntrega : null,
+                calificacion : revision ? revision.calificacion : null,
+            };
+        })
+
+        return assignmentsWithStatus;
     } catch (error) {
         throw new error;
     }

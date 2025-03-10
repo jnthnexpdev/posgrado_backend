@@ -40,8 +40,8 @@ export const allRevisionsOfAssignment = async(idAssignment) => {
     try {
         const revisions = await revisionModel.find({idAsignacion : idAssignment});
 
-        if(!revisions || revisions.length === 0){
-            throw new AppError("Por el momento no ahy entregas para esta asignacion", 404);
+        if (revisions.length === 0) {
+            return Promise.reject(new AppError("Por el momento, no hay entregas para esta asignacion", 404));
         }
 
         const idStudents = revisions.map(revision => revision.alumno);
@@ -76,6 +76,21 @@ export const revisionByStudentAndAssignment = async(idStudent, idAssignment) => 
     }
 }
 
+// Obtener todas las entregas de un alumno de todas las asignacion en un determinado periodo
+export const studentRevisionsOfAssignments = async(idStudent, idsAssignments) => {
+    try {
+        // Buscar todas las entregas del alumno para las asignaciones
+        const revisions = await revisionModel.find({
+            idAsignacion: { $in: idsAssignments },
+            alumno: idStudent
+        });
+
+        return revisions;
+    } catch (error) {
+        throw error;
+    }
+}
+
 // Asignar o actualizar la calificacion de la entrega de un alumno
 export const updateRatingOfRevision = async(idRevision, rating) => {
     try {
@@ -84,7 +99,7 @@ export const updateRatingOfRevision = async(idRevision, rating) => {
             throw new AppError("No se ha podido asignar la calificación debido a que la entrega no existe", 404);
         }
 
-        await revisionModel.findByIdAndUpdate(idRevision, { calificacion : rating }, { new : true });
+        await revisionModel.findByIdAndUpdate(idRevision, { calificacion : rating, estatusEntrega : 'Calificada' }, { new : true });
 
         return true;
     } catch (error) {
