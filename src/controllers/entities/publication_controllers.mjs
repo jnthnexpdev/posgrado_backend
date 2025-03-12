@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 import AppError from '../../utils/errors/server_errors.mjs';
-import * as publicationsService from '../../services/entities/tesis_service.mjs';
+import * as publicationsService from '../../services/entities/publication_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 
@@ -89,7 +89,7 @@ export const updatePublicationInfo = async(req, res) => {
             });
         }
 
-        await publicationsService.updatePublication(id, req.body);
+        await publicationsService.updatePublicationInfo(id, req.body);
 
         return res.status(200).json({
             success : true,
