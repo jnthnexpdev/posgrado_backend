@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 import AppError from '../../utils/errors/server_errors.mjs';
-import * as tesisService from '../../services/entities/tesis_service.mjs';
+import * as publicationsService from '../../services/entities/tesis_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 
-// Registrar una nueva tesis
-export const registerTesis = async(req, res) => {
+// Registrar una nueva publicacion
+export const registerPublication = async(req, res) => {
     try {
         const student = await userUtils.getDataUserFromCookie(req);
 
@@ -27,12 +27,11 @@ export const registerTesis = async(req, res) => {
             });
         }
 
-        const tesis = await tesisService.registerTesis(req.body, student._id);
+        await publicationsService.registerPublication(req.body, student._id);
         return res.status(201).json({
             success : true,
             httpCode : 201,
-            message : 'Tesis registrada',
-            tesis
+            message : 'Publicacion registrada',
         });
     } catch (error) {
         if (error instanceof AppError){
@@ -46,8 +45,8 @@ export const registerTesis = async(req, res) => {
     }
 }
 
-// Obtener la tesis de un alumno
-export const getTesisByStudent = async(req, res) => {
+// Obtener la publicacion de tesis de un alumno
+export const getPublicationOfStudent = async(req, res) => {
     try {
         const student = await userUtils.getDataUserFromCookie(req);
         if(!student){
@@ -58,12 +57,12 @@ export const getTesisByStudent = async(req, res) => {
             });
         }
 
-        const tesis = await tesisService.getTesisByStudent(student._id);
+        const publication = await publicationsService.getPublicationOfStudent(student._id);
         return res.status(200).json({
             success : true,
             httpCode : 200,
-            message : 'Tesis encontrada',
-            tesis
+            message : 'Publicacion encontrada',
+            publication
         });
     } catch (error) {
         if (error instanceof AppError){
@@ -77,8 +76,8 @@ export const getTesisByStudent = async(req, res) => {
     }
 }
 
-// Actualizar datos de una tesis {titulo, url, area de conocimiento, resumen}
-export const updateTesisInfo = async(req, res) => {
+// Actualizar datos de una publicacion {revista, url, fecha publicacion}
+export const updatePublicationInfo = async(req, res) => {
     try {
         const id = req.params.id;
         const isIdValid = mongoose.isValidObjectId(id);
@@ -86,16 +85,16 @@ export const updateTesisInfo = async(req, res) => {
             return res.status(400).json({
                 success : false,
                 httpCode : 400,
-                message : 'Id tesis invalido'
+                message : 'Id publicacion invalido'
             });
         }
 
-        await tesisService.updateTesis(id, req.body);
+        await publicationsService.updatePublication(id, req.body);
 
         return res.status(200).json({
             success : true,
             httpCode : 200,
-            message : 'Informacion tesis actualizada'
+            message : 'Informacion publicacion actualizada'
         });
 
     } catch (error) {
