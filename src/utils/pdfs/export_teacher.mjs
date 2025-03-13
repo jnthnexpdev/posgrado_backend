@@ -20,7 +20,7 @@ function getHeaderAndLogos({ fecha = 'Not Specified' } = {}) {
             ]
         },
         { text: 'INSTITUTO TECNOLÓGICO DE CUAUTLA', style: 'mainHeader' },
-        { text: 'COORDINACION DE POSGRADO', style: 'header' },
+        { text: 'COORDINACIÓN DE POSGRADO', style: 'header' },
         {
             stack: [
                 {

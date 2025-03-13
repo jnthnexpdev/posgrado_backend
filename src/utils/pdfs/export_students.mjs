@@ -20,7 +20,7 @@ function getHeaderAndLogos({ period = 'Enero - Junio 2025' } = {}) {
             ]
         },
         { text: 'INSTITUTO TECNOLÓGICO DE CUAUTLA', style: 'mainHeader' },
-        { text: 'COORDINACION DE POSGRADO', style: 'header' },
+        { text: 'COORDINACIÓN DE POSGRADO', style: 'header' },
         {
             stack: [
                 {

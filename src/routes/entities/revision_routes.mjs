@@ -12,6 +12,8 @@ router.use(cookieParser(secret));
 router.post('/registrar-entrega-alumno', revisionControllers.createRevision);
 router.get('/informacion-entrega-alumno/:idAssignment', revisionControllers.getRevision);
 router.get('/obtener-entregas-asignacion/:idAssignment', revisionControllers.getAllRevisionOfAssignment);
+router.get('/exportar-entregas-asignacion/:idAssignment', revisionControllers.exportRevisionsPDF);
 router.patch('/calificar-entrega/:idRevision', revisionControllers.assignRating);
+
 
 export default router;

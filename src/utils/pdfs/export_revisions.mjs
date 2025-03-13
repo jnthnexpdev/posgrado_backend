@@ -4,7 +4,14 @@ import { pdfStyles } from "./pdf_styles.mjs";
 import { getDateTime } from "../datetime.mjs";
 
 // Función para obtener el header del PDF
-function getHeaderAndLogos({ teacher = 'Asesor no definido', period = 'Periodo no especificado' } = {}) {
+function getHeaderAndLogos(
+    { 
+        assignment = 'Asignación no definida', 
+        period = 'Periodo no especificado', 
+        dateAssignment = 'Fecha no especificada', 
+        dateLimitAssignment = 'Fecha no especificada', 
+        teacher = 'Asesor no definido', 
+    } = {}) {
     return [
         {
             columns: [
@@ -25,7 +32,11 @@ function getHeaderAndLogos({ teacher = 'Asesor no definido', period = 'Periodo n
             stack: [
                 {
                     text: [
-                        'Listado de alumnos asesorados por el/la docente ', { text: `${teacher} `, decoration: 'underline' },  'en el sistema en el periodo ', { text: `${period}.`, decoration: 'underline' },
+                        'Lista de entregas para la asignación ', { text: `${assignment} `, decoration: 'underline' },
+                        ' del periodo ', { text: `${period}.`, decoration: 'underline' },
+                        ' asignada el día ', { text: `${dateAssignment}.`, decoration: 'underline' },
+                        ' con fecha limite del día ', { text: `${dateLimitAssignment}.`, decoration: 'underline' },
+                        ' por el asesor ', { text: `${teacher}.`, decoration: 'underline' },  
                     ]
                 }
             ],
@@ -40,14 +51,14 @@ function getNewTable() {
     return {
         table: {
             headerRows: 1,
-            widths: ['10%', '25%', '15%', '25%', '25%'],
+            widths: ['10%', '35%', '15%', '20%', '20%'],
             body: [
                 [
                     { text: 'No', style: 'tableHeader' },
-                    { text: 'Nombre', style: 'tableHeader' },
-                    { text: 'N Control', style: 'tableHeader' },
-                    { text: 'Correo', style: 'tableHeader' },
-                    { text: 'Periodo', style: 'tableHeader' }
+                    { text: 'Alumno', style: 'tableHeader' },
+                    { text: 'Fecha', style: 'tableHeader' },
+                    { text: 'Calificación', style: 'tableHeader' },
+                    { text: 'Estatus', style: 'tableHeader' }
                 ]
             ]
         },
@@ -61,29 +72,32 @@ function getNewTable() {
     };
 }
 
-// Función principal para exportar los asesorados en PDF
-export async function exportAdvised(students, teacher, period){
+// Función principal para exportar los entregas de una asignacion en PDF
+export async function exportRevisions( assignment, revisions, teacher, period){
     return new Promise(async (resolve, reject) => {
-        const { fecha, hora } = await getDateTime();
-        const date = fecha || "Not specified";
+
+        const nameAssignment = assignment.nombre;
+        const dateAssignment = assignment.fechaAsignacion || 'Fecha asignacion';
+        const dateLimitAssignment = assignment.fechaLimite || 'Fecha limite asignacion';
+        const nameTeacher = teacher;
 
         let content = [
-            ...getHeaderAndLogos({ teacher, period }),
+            ...getHeaderAndLogos({ assignment: nameAssignment, period, dateAssignment, dateLimitAssignment, teacher: nameTeacher }),
             getNewTable()
         ];
 
-        students.forEach((item, index) => {
+        revisions.forEach((item, index) => {
             if (index % 15 === 0 && index !== 0) {
                 content.push({ text: '', pageBreak: 'before' });
-                content.push(...getHeaderAndLogos({ teacher, period }));
+                content.push(...getHeaderAndLogos({ assignment: nameAssignment, period, dateAssignment, dateLimitAssignment, teacher: nameTeacher }));
                 content.push(getNewTable());
             }
             content[content.length - 1].table.body.push([
                 { text: `${index + 1}`, style: 'tableData' },
-                { text: item.alumno.nombre, style: 'tableData' },
-                { text: item.alumno.numeroControl, style: 'tableData' },
-                { text: item.alumno.correo, style: 'tableData' },
-                { text: item.periodo, style: 'tableData' }
+                { text: item.nombreAlumno, style: 'tableData' },
+                { text: item.fechaEntrega, style: 'tableData' },
+                { text: item.calificacion || '-', style: 'tableData' },
+                { text: item.estatusEntrega, style: 'tableData' }
             ]);
         });
 
