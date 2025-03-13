@@ -77,6 +77,37 @@ export const getTesisByStudent = async(req, res) => {
     }
 }
 
+export const getAllTesisOfPeriod = async(req, res) => {
+    try {
+        const period = req.params.period;
+        if(!period){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Periodo invalido'
+            });
+        }
+
+        const tesisData = await tesisService.getAllTesis(period);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Tesis encontradas',
+            tesis : tesisData
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
 // Actualizar datos de una tesis {titulo, url, area de conocimiento, resumen}
 export const updateTesisInfo = async(req, res) => {
     try {

@@ -85,7 +85,7 @@ export const allPeriods = async(queryParams) => {
     }
 }
 
-// Informacion de todos los estudiantes de un periodo seleccionado
+// Informacion de todos los alumnos de un periodo seleccionado por id
 export const studentsDataByPeriod = async (idPeriod, queryParams) => {
     try {
         const { search = '', page = 1, pageSize = 10 } = queryParams;
