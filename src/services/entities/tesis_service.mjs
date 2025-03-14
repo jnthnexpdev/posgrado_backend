@@ -112,6 +112,28 @@ export const updateTesis = async(idTesis, tesisData) => {
     }
 }
 
+// Preaprobar la tesis de un alumno
+export const preapproveTesisByTeacher = async(idStudent) => {
+    try {
+        const tesis = await tesisModel.find({ alumno : idStudent });
+        if(!tesis){
+            throw new AppError("El alumno no cuenta con tesis", 404);
+        }
+
+        const { fecha } = await getDateTime();
+
+        await tesisModel.findOneAndUpdate(
+            { alumno : idStudent }, 
+            { fechaEntrega : fecha },
+            { new : true }
+        );
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
 // Aprobar la tesis de un alumno
 export const approveTesisByAdmin = async(idTesis, nameAdmin) => {
     try {

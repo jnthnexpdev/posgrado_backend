@@ -14,6 +14,7 @@ router.get('/buscar-tesis-alumno', tesisControllers.getTesisByStudent);
 router.get('/tesis-alumnos-periodo/:period', tesisControllers.getAllTesisOfPeriod);
 router.put('/editar-informacion/:idTesis', tesisControllers.updateTesisInfo);
 router.patch('/aprobar-tesis/:idTesis', tesisControllers.approveTesis);
+router.patch('/preaprobar-tesis/:idStudent', tesisControllers.preapproveTesis);
 router.patch('/desaprobar-tesis/:idTesis', tesisControllers.disapproveTesis);
 router.patch('/rechazar-tesis/:idTesis', tesisControllers.rejectTesis);
 

@@ -240,3 +240,36 @@ export const rejectTesis = async(req, res) => {
         handleServerError(res, error);
     }
 }
+
+// Preaprobar una tesis de un alumno por parte de su asesor de tesis
+export const preapproveTesis = async(req, res) => {
+    try {
+        const idStudent = req.params.idStudent;
+        console.log(idStudent);
+        const isIdValid = mongoose.isValidObjectId(idStudent);
+        if(!isIdValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id alumno invalido'
+            });
+        }
+
+        await tesisService.preapproveTesisByTeacher(idStudent);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Tesis lista para aprobación por parte de coordinación'
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
