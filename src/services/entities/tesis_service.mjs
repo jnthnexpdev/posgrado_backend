@@ -111,3 +111,65 @@ export const updateTesis = async(idTesis, tesisData) => {
         throw error;
     }
 }
+
+// Aprobar la tesis de un alumno
+export const approveTesisByAdmin = async(idTesis, nameAdmin) => {
+    try {
+        const tesis = await tesisModel.findById(idTesis);
+        if(!tesis){
+            throw new AppError("La tesis no existe", 404);
+        }
+
+        const { fecha } = await getDateTime();
+
+        await tesisModel.findByIdAndUpdate(
+            idTesis, 
+            { 'aprobacion.nombre' : nameAdmin, 'aprobacion.fechaAprobacion' : fecha, estatus : 'Aprobada' },
+            { new : true }
+        );
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Quitar la aprobacion de una tesis
+export const disapproveTesisByAdmin = async(idTesis) => {
+    try {
+        const tesis = await tesisModel.findById(idTesis);
+        if(!tesis){
+            throw new AppError("La tesis no existe", 404);
+        }
+
+        await tesisModel.findByIdAndUpdate(
+            idTesis, 
+            { 'aprobacion.nombre' : null, 'aprobacion.fechaAprobacion' : null, estatus : 'En progreso' },
+            { new : true }
+        );
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Rechazar tesis
+export const rejectTesisByAdmin = async(idTesis) => {
+    try {
+        const tesis = await tesisModel.findById(idTesis);
+        if(!tesis){
+            throw new AppError("La tesis no existe", 404);
+        }
+
+        await tesisModel.findByIdAndUpdate(
+            idTesis, 
+            { 'aprobacion.nombre' : null, 'aprobacion.fechaAprobacion' : null, estatus : 'Rechazada' },
+            { new : true }
+        );
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}

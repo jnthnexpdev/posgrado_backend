@@ -77,6 +77,7 @@ export const getTesisByStudent = async(req, res) => {
     }
 }
 
+// Obtener todas las tesis de un periodo
 export const getAllTesisOfPeriod = async(req, res) => {
     try {
         const period = req.params.period;
@@ -111,8 +112,8 @@ export const getAllTesisOfPeriod = async(req, res) => {
 // Actualizar datos de una tesis {titulo, url, area de conocimiento, resumen}
 export const updateTesisInfo = async(req, res) => {
     try {
-        const id = req.params.id;
-        const isIdValid = mongoose.isValidObjectId(id);
+        const idTesis = req.params.idTesis;
+        const isIdValid = mongoose.isValidObjectId(idTesis);
         if(!isIdValid){
             return res.status(400).json({
                 success : false,
@@ -121,7 +122,7 @@ export const updateTesisInfo = async(req, res) => {
             });
         }
 
-        await tesisService.updateTesis(id, req.body);
+        await tesisService.updateTesis(idTesis, req.body);
 
         return res.status(200).json({
             success : true,
@@ -129,6 +130,105 @@ export const updateTesisInfo = async(req, res) => {
             message : 'Informacion tesis actualizada'
         });
 
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+// Aprobar una tesis de un alumno por parte del coordinador de posgrado
+export const approveTesis = async(req, res) => {
+    try {
+        const user = await userUtils.getDataUserFromCookie(req);
+        const idTesis = req.params.idTesis;
+        const isIdValid = mongoose.isValidObjectId(idTesis);
+        if(!isIdValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id tesis invalido'
+            });
+        }
+
+        await tesisService.approveTesisByAdmin(idTesis, user.nombre);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Tesis aprobada'
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+// Desaprobar una tesis de un alumno por parte del coordinador de posgrado
+export const disapproveTesis = async(req, res) => {
+    try {
+        const idTesis = req.params.idTesis;
+        const isIdValid = mongoose.isValidObjectId(idTesis);
+        if(!isIdValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id tesis invalido'
+            });
+        }
+
+        await tesisService.disapproveTesisByAdmin(idTesis);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Tesis desaprobada'
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+// Rechazar tesis de un alumno por parte del coordinador de posgrado
+export const rejectTesis = async(req, res) => {
+    try {
+        const idTesis = req.params.idTesis;
+        const isIdValid = mongoose.isValidObjectId(idTesis);
+        if(!isIdValid){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Id tesis invalido'
+            });
+        }
+
+        const user = await userUtils.getDataUserFromCookie(req);
+
+        await tesisService.rejectTesisByAdmin(idTesis);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Tesis rechazada'
+        });
     } catch (error) {
         if (error instanceof AppError){
             return res.status(error.httpCode).json({
