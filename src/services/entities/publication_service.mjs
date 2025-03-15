@@ -65,3 +65,14 @@ export const updatePublicationInfo = async(idPublication, data) => {
         throw error;
     }
 }
+
+// ELiminar la publicacion relacionada a un estudiante
+export const deletePublicationOfStudent = async(idStudent) => {
+    try {
+        await publicationModel.findOneAndDelete({ alumno : idStudent });
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}

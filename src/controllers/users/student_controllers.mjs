@@ -81,7 +81,6 @@ export const exportStudentsByPeriodPDF = async(req, res) => {
 // Eliminar la cuenta de un alumno mediante id
 export const deleteStudentAccount = async(req, res) => {
     try {
-
         const id = req.params.id;
         const isIdValid = mongoose.isValidObjectId(id);
         if(!isIdValid){

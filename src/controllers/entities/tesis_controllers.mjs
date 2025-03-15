@@ -4,6 +4,7 @@ import AppError from '../../utils/errors/server_errors.mjs';
 import * as tesisService from '../../services/entities/tesis_service.mjs';
 import * as userUtils from '../../utils/users/data_users.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
+import { exportTesis } from '../../utils/pdfs/export_tesis.mjs';
 
 // Registrar una nueva tesis
 export const registerTesis = async(req, res) => {
@@ -262,6 +263,41 @@ export const preapproveTesis = async(req, res) => {
             httpCode : 200,
             message : 'Tesis lista para aprobación por parte de coordinación'
         });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+// Exportar en pdf todos las entregas de una asignación
+export const exportRevisionsPDF = async(req, res) => {
+    try {
+        const period = req.params.period;
+        if(!period){
+            return res.status(400).json({
+                success : false,
+                httpCode : 400,
+                message : 'Periodo invalido'
+            });
+        }
+
+        const tesisData = await tesisService.getAllTesis(period);
+
+        // Procesar la informacion para crear el pdf
+        const buffer = await exportTesis(tesisData ,period);
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename="tesis.pdf"',
+            'Content-Length': buffer.length
+        });
+        res.end(buffer);
+
     } catch (error) {
         if (error instanceof AppError){
             return res.status(error.httpCode).json({

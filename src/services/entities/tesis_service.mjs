@@ -195,3 +195,14 @@ export const rejectTesisByAdmin = async(idTesis) => {
         throw error;
     }
 }
+
+// Eliminar tesis de un alumno
+export const deleteTesisByStudent = async(idStudent) => {
+    try {
+        await tesisModel.findOneAndDelete({ alumno : idStudent });
+
+        return true;
+    } catch (error) {
+        
+    }
+}

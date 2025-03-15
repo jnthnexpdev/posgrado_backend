@@ -1,5 +1,7 @@
-import studenModel from '../../models/users/student_model.mjs';
+import studentModel from '../../models/users/student_model.mjs';
 import { getDateTime } from '../../utils/datetime.mjs';
+import { deletePublicationOfStudent } from '../entities/publication_service.mjs';
+import { deleteTesisByStudent } from '../entities/tesis_service.mjs';
 import AppError from '../../utils/errors/server_errors.mjs';
 
 // Guardar la informacion de un alumno
@@ -11,7 +13,7 @@ export const saveStudentUser = async(studentData) => {
             throw new AppError("Informacion incompleta", 401);
         }
 
-        const student = new studenModel({
+        const student = new studentModel({
             nombre : studentData.nombre,
             correo : studentData.correo,
             numeroControl : studentData.numeroControl,
@@ -45,13 +47,13 @@ export const allStudentsUsers = async(queryParams) => {
             ] 
         };
 
-        const students = await studenModel
+        const students = await studentModel
             .find(filter)
             .select('-password')
             .skip((page - 1) * pageSize)
             .limit(pageSize);
 
-        const total = await studenModel.countDocuments(filter);
+        const total = await studentModel.countDocuments(filter);
 
         if(students.length === 0){
             throw new AppError('No hay alumnos registrados en el sistema', 404);
@@ -75,13 +77,21 @@ export const allStudentsUsers = async(queryParams) => {
 // Eliminar un alumno mediante id
 export const deleteStudentUser = async(id) => {
     try {
-        const deleteStudent = await studenModel.findByIdAndDelete(id);
+
+        // Eliminar la publacion del alumno
+        await deletePublicationOfStudent(id);
+
+        // Eliminar la tesis del alumno
+        await deleteTesisByStudent(id);
+
+        // Eliminar la informacion del alumno
+        const deleteStudent = await studentModel.findByIdAndDelete(id);
 
         if(!deleteStudent){
             throw new AppError("Error al eliminar la cuenta", 401);
         }
 
-        return;
+        return true;
     } catch (error) {
         throw error;
     }

@@ -4,6 +4,7 @@ import AppError from '../../utils/errors/server_errors.mjs';
 import * as periodService from '../../services/entities/period_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 import { exportPeriods } from '../../utils/pdfs/export_periods.mjs';
+import { importStudentsFromCSV } from '../../utils/csv/import_students.mjs'
 
 // Registrar nuevo periodo
 export const registerPeriod = async(req, res) => {
@@ -68,6 +69,45 @@ export const addStudentToPeriod = async(req, res) => {
         handleServerError(res, error);
     }
 }
+
+// Agregar varios alumnos a un periodo desde un archivo CSV
+export const addStudentsToPeriodFromCSV = async (req, res) => {
+    try {
+        const idPeriod = req.params.idPeriod;
+
+        if (!mongoose.isValidObjectId(idPeriod)) {
+            return res.status(400).json({
+                success: false,
+                httpCode: 400,
+                message: 'Id de periodo inválido'
+            });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                httpCode: 400,
+                message: 'No se ha subido ningún archivo CSV'
+            });
+        }
+
+        const result = await importStudentsFromCSV(req.file.buffer, idPeriod);
+
+        return res.status(200).json({
+            success: true,
+            httpCode: 200,
+            message: 'Alumnos agregados al periodo',
+            result: result
+        });
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            httpCode: 400,
+            message: 'Error al agregar alumnos al periodo',
+            error: error.message
+        });
+    }
+};
 
 // Alumnos filtrados por periodo
 export const studentsByPeriod = async(req, res) => {

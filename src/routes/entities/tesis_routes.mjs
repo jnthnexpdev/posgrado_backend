@@ -12,6 +12,7 @@ router.use(cookieParser(secret));
 router.post('/registrar-tesis', tesisControllers.registerTesis);
 router.get('/buscar-tesis-alumno', tesisControllers.getTesisByStudent);
 router.get('/tesis-alumnos-periodo/:period', tesisControllers.getAllTesisOfPeriod);
+router.get('/exportar-tesis-periodo/:period', tesisControllers.exportRevisionsPDF);
 router.put('/editar-informacion/:idTesis', tesisControllers.updateTesisInfo);
 router.patch('/aprobar-tesis/:idTesis', tesisControllers.approveTesis);
 router.patch('/preaprobar-tesis/:idStudent', tesisControllers.preapproveTesis);
