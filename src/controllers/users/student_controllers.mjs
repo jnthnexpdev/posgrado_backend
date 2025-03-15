@@ -4,6 +4,7 @@ import AppError from '../../utils/errors/server_errors.mjs';
 import * as studentService from '../../services/users/student_service.mjs';
 import { handleServerError } from '../../utils/errors/error_handle.mjs';
 import { exportStudents } from '../../utils/pdfs/export_students.mjs';
+import { registerStudentsCSV } from '../../utils/csv/register_students.mjs'
 
 // Crear cuenta de alumno
 export const registerStudentAccount = async(req, res) => {
@@ -29,6 +30,45 @@ export const registerStudentAccount = async(req, res) => {
         handleServerError(res, error);
     }
 }
+
+// Registrar varios alumnos desde un archivo CSV y agregarlos a un periodo seleccionado
+export const registerStudentsFromCSV = async (req, res) => {
+    try {
+        const idPeriod = req.params.idPeriod;
+
+        if (!mongoose.isValidObjectId(idPeriod)) {
+            return res.status(400).json({
+                success: false,
+                httpCode: 400,
+                message: 'Id de periodo inválido'
+            });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                httpCode: 400,
+                message: 'No se ha subido ningún archivo CSV'
+            });
+        }
+
+        const result = await registerStudentsCSV(req.file.buffer, idPeriod, req.body.password);
+
+        return res.status(201).json({
+            success: true,
+            httpCode: 201,
+            message: result.message,
+            result: result
+        });
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            httpCode: 400,
+            message: 'Error al procesar el archivo CSV',
+            error: error.message
+        });
+    }
+};
 
 // Obtener las cuentas de todos los alumnos
 export const allStudentsAccounts = async(req, res) => {

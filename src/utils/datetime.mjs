@@ -8,19 +8,14 @@ const apiUrls = [
 ];
 
 export const getDateTime = async () => {
-  console.time('Tiempo de respuesta'); // Inicia contador
 
   try {
     const response = await Promise.race(
       apiUrls.map(url => axios.get(url, { timeout: 1000 })) // Timeout de 1s
     );
 
-    console.timeEnd('Tiempo de respuesta'); // Finaliza contador
     return formatDateTime(extractDateTime(response.data));
   } catch (error) {
-    console.warn('⚠️ Todas las APIs tardaron demasiado o fallaron. Usando hora local.');
-
-    console.timeEnd('Tiempo de respuesta'); // Finaliza contador incluso si hay error
     return formatDateTime(new Date());
   }
 };
