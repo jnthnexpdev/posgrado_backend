@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 import { getDateTime } from '../../utils/datetime.mjs';
 import periodModel from '../../models/entities/period_model.mjs';
+import studentModel from '../../models/users/student_model.mjs';
 import AppError from '../../utils/errors/server_errors.mjs'
 
 // Registrar periodo en el sistema
@@ -53,25 +54,47 @@ export const addStudentToPeriod = async(idStudent, idPeriod) => {
 export const allPeriods = async(queryParams) => {
     try {
         let { search = '', page = 1, pageSize = 20 } = queryParams;
-        if(search != ''){
+        if (search !== '') {
             page = 1;
         }
 
         const searchRegex = new RegExp(search, 'i');
 
+        // Obtener los periodos con alumnos
         const periods = await periodModel
-            .find({ periodo : searchRegex })
+            .find({ periodo: searchRegex })
             .skip((page - 1) * pageSize)
-            .limit(pageSize);
+            .limit(pageSize)
+            .lean();
 
-        const total = await periodModel.countDocuments({ periodo : searchRegex });
-
-        if(periods.length === 0){
+        if (periods.length === 0) {
             throw new AppError('No hay periodos registrados en el sistema', 404);
         }
 
+        // Obtener los IDs únicos de alumnos en todos los periodos
+        const allStudentIds = [...new Set(periods.flatMap(period => period.alumnos))];
+
+        // Obtener solo los alumnos que realmente existen en la base de datos
+        const existingStudentIds = new Set(
+            (await studentModel.find({ _id: { $in: allStudentIds } }, { _id: 1 })).map(s => s._id.toString())
+        );
+
+        // Filtrar los periodos eliminando alumnos inexistentes
+        const updatedPeriods = await Promise.all(periods.map(async (period) => {
+            const validStudentIds = period.alumnos.filter(id => existingStudentIds.has(id.toString()));
+
+            if (validStudentIds.length !== period.alumnos.length) {
+                await periodModel.updateOne({ _id: period._id }, { alumnos: validStudentIds });
+            }
+
+            return { ...period, alumnos: validStudentIds };
+        }));
+
+        // Obtener el conteo total de periodos
+        const total = await periodModel.countDocuments({ periodo: searchRegex });
+
         return {
-            periods,
+            periods: updatedPeriods,
             pagination: {
                 total,
                 page: Number(page),
@@ -79,7 +102,6 @@ export const allPeriods = async(queryParams) => {
                 totalPages: Math.ceil(total / pageSize)
             }
         };
-
     } catch (error) {
         throw error;
     }
