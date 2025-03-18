@@ -21,7 +21,7 @@ export const createRevision = async(req, res) => {
             });
         }
 
-        await revisionService.registerRevision(user._id ,req.body);
+        await revisionService.registerRevision(user._id , req.body);
 
         return res.status(201).json({
             success : true,

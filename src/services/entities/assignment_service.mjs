@@ -71,35 +71,51 @@ export const assignmentByTeacherAndPeriod = async(idTeacher, period, queryParams
 }
 
 // Obtener todas las asignaciones de un alumno
-export const getAssignmentByStudent = async(idStudent, period) => {
+export const getAssignmentByStudent = async (idStudent, period) => {
     try {
-        const assignments = await assingmentModel
-        .find({ periodo : period, 'alumnos.idAlumno' : idStudent });
+        // Obtener la fecha actual en formato "dd-mm-aaaa"
+        const { fecha } = await getDateTime(); 
+        const ahora = convertirFechaAObjetoDate(fecha); // Convertir la fecha actual a Date
 
-        /* 
-        Obtener el estatus de la tarea del alumno, en base al id de la asignacion,
-        si el alumno no ha entregado esa tarea, que su estatus de entrega sea pendiente
-        */
-        const assignmentIds = assignments.map(assignment => assignment._id); 
+        const assignments = await assingmentModel.find({
+            periodo: period,
+            'alumnos.idAlumno': idStudent
+        });
 
+        const assignmentIds = assignments.map(assignment => assignment._id);
         const revisions = await studentRevisionsOfAssignments(idStudent, assignmentIds);
 
-        const assignmentsWithStatus = assignments.map(assignment => {
-            const revision = revisions.find(rev => rev.idAsignacion.toString() === assignment._id.toString());
+        // Verificar si la fecha límite ha pasado y actualizar permitirEntrega
+        const assignmentsWithStatus = await Promise.all(
+            assignments.map(async (assignment) => {
+                const revision = revisions.find(rev => rev.idAsignacion.toString() === assignment._id.toString());
 
-            return {
-                ...assignment.toObject(),
-                estatusEntrega : revision ? revision.estatusEntrega : "Pendiente",
-                fechaEntrega : revision ? revision.fechaEntrega : null,
-                calificacion : revision ? revision.calificacion : null,
-            };
-        })
+                // Convertir fechaLimite de "dd-mm-aaaa" a objeto Date
+                const fechaLimite = convertirFechaAObjetoDate(assignment.fechaLimite);
+                
+                // Si la fecha límite ha pasado y aún permite entrega, actualizar
+                if (fechaLimite < ahora && assignment.permitirEntrega) {
+                    await assingmentModel.updateOne(
+                        { _id: assignment._id },
+                        { $set: { permitirEntrega: false } }
+                    );
+                    assignment.permitirEntrega = false;
+                }
+
+                return {
+                    ...assignment.toObject(),
+                    estatusEntrega: revision ? revision.estatusEntrega : "Pendiente",
+                    fechaEntrega: revision ? revision.fechaEntrega : null,
+                    calificacion: revision ? revision.calificacion : null,
+                };
+            })
+        );
 
         return assignmentsWithStatus;
     } catch (error) {
-        throw new error;
+        throw error;
     }
-}
+};
 
 // Buscar una asignacion mediante id 
 export const assignmentById = async(idAssignment) => {
@@ -155,3 +171,9 @@ export const deleteAssingmentById = async(idAssingment) => {
         throw new error;
     }
 }
+
+// Función para convertir "dd-mm-aaaa" a objeto Date
+const convertirFechaAObjetoDate = (fechaStr) => {
+    const [dia, mes, anio] = fechaStr.split('-').map(Number);
+    return new Date(anio, mes - 1, dia); // mes - 1 porque en JavaScript los meses van de 0 a 11
+};

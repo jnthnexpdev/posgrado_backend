@@ -76,6 +76,123 @@ export const userAuth = async(req, res) => {
     }
 }
 
+// Validar el codigo de acceso para permitir el incio de sesión
+export const validateAccessCode = async(req, res) => {
+    try {
+        const accessCode = req.body.codigoAcceso;
+        const email = req.body.correo;
+        const { token } = await authService.loginWithAccessCode(email, accessCode);
+
+        // Configurar la cookie de sesión (opcional)
+        res.cookie('session', token, {
+            httpOnly: false, // Proteger la cookie del acceso por JavaScript
+            signed: true,
+        });
+
+        return res.status(200).json({
+            success: true,
+            httpCode : 200,
+            message: 'Sesión iniciada',
+            token
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+// Verificar si existe un usuario registrado en el sistema dado una direccion de correo
+export const validateEmail = async(req, res) => {
+    try {
+        const email = req.params.email;
+
+        const user = await userUtils.getDataUserByEmail(email);
+
+        if(!user){
+            return res.status(404).json({
+                success : false,
+                httpCode : 404,
+                message : 'No existe una cuenta vinculada a la dirección de correo'
+            });
+        }
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'La dirección de correo pertenece a una cuenta'
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
+// export const generateAccessCode = async(req, res) => {
+//     try{
+//         const email = req.body.correo;
+//         const user = await userUtils.getUserByEmail(email);
+//         if(!user){
+//             return res.status(404).json({
+//                 success : false,
+//                 message : 'Este correo no pertenece a ninguna cuenta registrada'
+//             });
+//         }
+
+//         const accessCode = randomString.generate(6);
+//         await userUtils.updateSessionCode(user, accessCode);
+//         const sendEmail = await emailUtils.sendEmailAccessCode(email, accessCode);
+        
+//         if(!sendEmail){
+//             return res.status(400).json({
+//                 success : false,
+//                 message : 'Ha ocurrido un error el enviar el correo, intenta mas tarde'
+//             });
+//         }
+//         return res.status(200).json({
+//             success : true,
+//             message : 'Correo enviado'
+//         });
+//     }catch(error){
+//         handleServerError(res, error);
+//     }
+// };
+
+// Generar un codigo alfanumerico de 6 digitos y enviarlo al usuario para acceder al sistema
+export const generateAccessCode = async(req, res) => {
+    try {
+        const email = req.params.email;
+        
+        await authService.generateAndSendAccessCode(email);
+
+        return res.status(200).json({
+            success : true,
+            httpCode : 200,
+            message : 'Código generado y enviado por correo'
+        });
+    } catch (error) {
+        if (error instanceof AppError){
+            return res.status(error.httpCode).json({
+                success: false,
+                httpCode: error.httpCode,
+                message: error.message,
+            });
+        }
+        handleServerError(res, error);
+    }
+}
+
 // Obtener la informacion de un usario
 export const dataUser = async(req, res) => {
     try {

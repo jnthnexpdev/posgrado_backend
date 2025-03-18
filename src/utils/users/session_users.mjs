@@ -68,19 +68,19 @@ export async function updateSessionCode(user, code){
         if(user.tipoCuenta === 'Coordinador'){
             await adminModel.findOneAndUpdate(
                 { correo : user.correo },
-                { 'sesion.codigoAcceso' : code, 'sesion.validezCodigoAcceso' : true },
+                { 'sesion.codigoAcceso' : code, 'sesion.validezCodigo' : true },
                 { new : true }
             );
         }else if(user.tipoCuenta === 'Asesor'){
             await teacherModel.findOneAndUpdate(
                 { correo : user.correo },
-                { 'sesion.codigoAcceso' : code, 'sesion.validezCodigoAcceso' : true },
+                { 'sesion.codigoAcceso' : code, 'sesion.validezCodigo' : true },
                 { new : true }
             );
         }else if(user.tipoCuenta === 'Alumno'){
             await studentModel.findOneAndUpdate(
                 { correo : user.correo },
-                { 'sesion.codigoAcceso' : code, 'sesion.validezCodigoAcceso' : true },
+                { 'sesion.codigoAcceso' : code, 'sesion.validezCodigo' : true },
                 { new : true }
             );
         }
@@ -97,19 +97,19 @@ export async function updateSessionCodeValidity (user){
         if(user.tipoCuenta === 'Coordinador'){
             await adminModel.findOneAndUpdate(
                 { correo : user.correo },
-                { 'sesion.codigoAcceso' : null, 'sesion.validezCodigoAcceso' : false },
+                { 'sesion.codigoAcceso' : null, 'sesion.validezCodigo' : false },
                 { new : true }
             );
         }else if(user.tipoCuenta === 'Asesor'){
             await teacherModel.findOneAndUpdate(
                 { correo : user.correo },
-                { 'sesion.codigoAcceso' : null, 'sesion.validezCodigoAcceso' : false  },
+                { 'sesion.codigoAcceso' : null, 'sesion.validezCodigo' : false  },
                 { new : true }
             );
         }else if(user.tipoCuenta === 'Alumno'){
             await studentModel.findOneAndUpdate(
                 { correo : user.correo },
-                { 'sesion.codigoAcceso' : null, 'sesion.validezCodigoAcceso' : false  },
+                { 'sesion.codigoAcceso' : null, 'sesion.validezCodigo' : false  },
                 { new : true }
             );
         }

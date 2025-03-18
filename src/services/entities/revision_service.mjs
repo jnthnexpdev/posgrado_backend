@@ -12,6 +12,11 @@ export const registerRevision = async(idStudent, assignmentData) => {
         if(!assignmentData){
             throw new AppError("La informacion de la entrega esta incompleta", 400);
         }
+
+        if(assignmentData.permitirEntrega === false){
+            throw new AppError("La fecha limite de esta asignacion ya se ha cumplido");
+        }
+
         const { fecha, hora } = await getDateTime();
         const tesis = await tesisModel.findOne({ alumno : idStudent });
 
